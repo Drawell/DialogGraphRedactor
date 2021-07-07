@@ -40,9 +40,9 @@ class QDMGraphicsScene(QGraphicsScene):
         lines_light, lines_dark = [], []
         for x in range(first_left, right, self.grid_size):
             if x % (self.grid_size * self.grid_squares) != 0:
-                lines_light.append(QLine(x, top, x, right))
+                lines_light.append(QLine(x, top, x, bottom))
             else:
-                lines_dark.append(QLine(x, top, x, right))
+                lines_dark.append(QLine(x, top, x, bottom))
 
         for y in range(first_top, bottom, self.grid_size):
             if y % (self.grid_size * self.grid_squares) != 0:
