@@ -1,8 +1,9 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QPen, QFont, QColor
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit
-from node_graphics_scene import QDMGraphicsScene
-from node_graphics_view import QDMGraphicsView
+from gui.graphics_view import QDMGraphicsView
+from node.node import Node
+from node.scene import Scene
 
 
 class NodeEditorWnd(QWidget):
@@ -18,16 +19,17 @@ class NodeEditorWnd(QWidget):
         self.layout().setContentsMargins(0, 0, 0, 0)
 
         # create graphics scene
-        self.gr_scene = QDMGraphicsScene()
+        self.scene = Scene()
+
+        node = Node(self.scene, 'My node')
 
         # create graphics view
-        self.view = QDMGraphicsView(self.gr_scene, self)
-        self.view.setScene(self.gr_scene)
+        self.view = QDMGraphicsView(self.scene.gr_scene, self)
         self.layout().addWidget(self.view)
 
         self.show()
 
-        self.add_debug_content()
+        #self.add_debug_content()
 
     def add_debug_content(self):
         green_brush = QBrush(Qt.green)
