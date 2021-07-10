@@ -1,14 +1,15 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QBrush, QPen, QFont, QColor
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit
-from gui.graphics_view import QDMGraphicsView
-from node.node import Node
-from node.scene import Scene
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit, QApplication
+from gui import QDMGraphicsView
+from node_system import Node, Scene
 
 
 class NodeEditorWnd(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.stylesheet_filename = 'qss/node_style.qss'
+        self.load_stylesheet(self.stylesheet_filename)
         self.init_ui()
 
     def init_ui(self):
@@ -21,7 +22,7 @@ class NodeEditorWnd(QWidget):
         # create graphics scene
         self.scene = Scene()
 
-        node = Node(self.scene, 'My node')
+        node = Node(self.scene, 'My node_system', inputs=[1, 2, 3], outputs=[1])
 
         # create graphics view
         self.view = QDMGraphicsView(self.scene.gr_scene, self)
@@ -29,7 +30,7 @@ class NodeEditorWnd(QWidget):
 
         self.show()
 
-        #self.add_debug_content()
+        # self.add_debug_content()
 
     def add_debug_content(self):
         green_brush = QBrush(Qt.green)
@@ -57,3 +58,9 @@ class NodeEditorWnd(QWidget):
         line = self.gr_scene.addLine(0, 0, 100, 200, outline_pen)
         line.setFlag(QGraphicsItem.ItemIsMovable)
         line.setFlag(QGraphicsItem.ItemIsSelectable)
+
+    def load_stylesheet(self, stylesheet_filename):
+        file = QFile(stylesheet_filename)
+        file.open(QFile.ReadOnly | QFile.Text)
+        stylesheet = file.readAll()
+        QApplication.instance().setStyleSheet(str(stylesheet, encoding='utf-8'))

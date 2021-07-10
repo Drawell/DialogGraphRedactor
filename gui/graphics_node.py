@@ -7,6 +7,7 @@ class QDMGraphicsNode(QGraphicsItem):
     def __init__(self, node, parent=None):
         super().__init__(parent)
         self.node = node
+        self.content_widget = self.node.content_widget
 
         # init our flags
         self.hovered = False
@@ -15,11 +16,12 @@ class QDMGraphicsNode(QGraphicsItem):
 
         self.init_sizes()
         self.init_assets()
+        self.init_sockets()
         self.setup_ui()
 
     @property
     def content(self):
-        return self.node.content if self.node else None
+        return self.node.content_widget if self.node else None
 
     @property
     def title(self):
@@ -34,7 +36,6 @@ class QDMGraphicsNode(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setAcceptHoverEvents(True)
         self.init_title()
-        self.title = self.node.title
         self.init_content()
 
     def init_title(self):
@@ -81,8 +82,11 @@ class QDMGraphicsNode(QGraphicsItem):
         self.gr_content.node = self.node
         self.gr_content.setParentItem(self)
 
+    def init_sockets(self):
+        pass
+
     #def on_selected(self):
-    #    self.node.scene.grScene.itemSelected.emit()
+    #    self.node_system.scene.grScene.itemSelected.emit()
 
     #def do_select(self, new_state=True):
     #    self.setSelected(new_state)
@@ -107,7 +111,7 @@ class QDMGraphicsNode(QGraphicsItem):
             self.node.scene.history.storeHistory("Node moved", setModified=True)
 
             self.node.scene.resetLastSelectedStates()
-            self.do_select()  # also trigger itemSelected when node was moved
+            self.do_select()  # also trigger itemSelected when node_system was moved
 
             # we need to store the last selected state, because moving does also select the nodes
             self.node.scene._last_selected_items = self.node.scene.getSelectedItems()
