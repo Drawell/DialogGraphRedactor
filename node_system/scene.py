@@ -22,6 +22,8 @@ class Scene:
 
     def add_edge(self, edge):
         self.edges.append(edge)
+        self.gr_scene.addItem(edge.gr_edge)
 
     def remove_edge(self, edge):
         self.edges.remove(edge)
+        self.gr_scene.removeItem(edge.gr_edge)

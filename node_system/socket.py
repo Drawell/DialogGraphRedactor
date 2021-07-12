@@ -17,3 +17,12 @@ class Socket:
         self.gr_socket = QDMGraphicsSocket(self, self.node.gr_node)
         self.gr_socket.set_on_position(index, position in [ESocketPosition.LEFT_TOP, ESocketPosition.LEFT_BOTTOM],
                                        position in [ESocketPosition.LEFT_TOP, ESocketPosition.RIGHT_TOP])
+
+        self.edge = None
+
+    def get_socket_global_position(self):
+        return self.gr_socket.get_global_position()
+
+    def connect_to_edge(self, edge=None):
+        self.edge = edge
+

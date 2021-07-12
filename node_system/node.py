@@ -24,3 +24,9 @@ class Node:
             socket = Socket(node=self, index=idx, position=esp.RIGHT_TOP)
             self.outputs.append(socket)
 
+    @property
+    def position(self):
+        return self.gr_node.pos()
+
+    def set_pos(self, x, y):
+        self.gr_node.setPos(x, y)

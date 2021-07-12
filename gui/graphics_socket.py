@@ -8,6 +8,7 @@ from gui import QDMGraphicsNode
 class QDMGraphicsSocket(QGraphicsItem):
     def __init__(self, socket, parent: QDMGraphicsNode = None):
         super().__init__(parent)
+        self.socket = socket
         self.gr_node = parent
 
         self.radius = 6.0
@@ -27,6 +28,9 @@ class QDMGraphicsSocket(QGraphicsItem):
         else:
             y = - index * self.socket_spacing + self.gr_node.height - self.gr_node.edge_padding
         self.setPos(x, y)
+
+    def get_global_position(self):
+        return [self.x() + self.gr_node.x(), self.y() + self.gr_node.y()]
 
     def boundingRect(self) -> QRectF:
         return QRectF(-self.radius - self.outline_width, -self.radius - self.outline_width,
