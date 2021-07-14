@@ -1,12 +1,23 @@
+from enum import Enum
+
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtGui import QPainter, QMouseEvent
 from PyQt5.QtWidgets import QGraphicsView
 
+from .graphics_socket import QDMGraphicsSocket
+from state_machine.state_machine import StateMachine, ActionResult
+
+
+class Mode(Enum):
+    NONE = 1
+    DRAG_EDGE_TO_INPUT = 2
+    DRAG_EDGE_TO_OUTPUT = 3
+
 
 class QDMGraphicsView(QGraphicsView):
-    def __init__(self, scene, parent=None):
+    def __init__(self, ge_scene, state_machine: StateMachine, parent=None):
         super().__init__(parent)
-        self.gr_scene = scene
+        self.gr_scene = ge_scene
         self.init_ui()
         self.setScene(self.gr_scene)
 
@@ -15,6 +26,8 @@ class QDMGraphicsView(QGraphicsView):
         self.zoom = 10
         self.zoom_step = 1
         self.zoom_range = [0, 10]
+        self.state_machine = state_machine
+        self.mode = Mode.NONE
 
     def init_ui(self):
         self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing
@@ -33,6 +46,11 @@ class QDMGraphicsView(QGraphicsView):
             self.right_mouse_button_press(event)
         else:
             super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event) -> None:
+        pos = self.mapToScene(event.pos())
+        self.state_machine.on_mouse_move(pos)
+        super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event) -> None:
         if event.button() == Qt.MiddleButton:
@@ -60,16 +78,26 @@ class QDMGraphicsView(QGraphicsView):
         self.setDragMode(QGraphicsView.NoDrag)
 
     def left_mouse_button_press(self, event):
-        return super().mousePressEvent(event)
+        item = self.get_item_at_click(event)
+        if self.state_machine.on_mouse_left_press(item) == ActionResult.CONTINUE_PARENT_ACTION:
+            super().mousePressEvent(event)
 
     def left_mouse_button_release(self, event):
-        return super().mouseReleaseEvent(event)
+        item = self.get_item_at_click(event)
+        if self.state_machine.on_mouse_left_release(item) == ActionResult.CONTINUE_PARENT_ACTION:
+            super().mouseReleaseEvent(event)
 
     def right_mouse_button_press(self, event):
-        return super().mousePressEvent(event)
+        super().mousePressEvent(event)
 
     def right_mouse_button_release(self, event):
-        return super().mouseReleaseEvent(event)
+        super().mouseReleaseEvent(event)
+
+    def get_item_at_click(self, event):
+        pos = event.pos()
+        obj = self.itemAt(pos)
+        return obj
+
 
     def wheelEvent(self, event) -> None:
         # calculate zoom factor

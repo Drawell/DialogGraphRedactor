@@ -2,7 +2,10 @@ from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QBrush, QPen, QFont, QColor
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit, QApplication
 from gui import QDMGraphicsView
-from node_system import Node, Scene, Edge
+from node_system.node import Node
+from node_system.scene import Scene
+from node_system.edge import Edge
+from state_machine.state_machine import StateMachine
 
 
 class NodeEditorWnd(QWidget):
@@ -21,11 +24,12 @@ class NodeEditorWnd(QWidget):
 
         # create graphics scene
         self.scene = Scene()
+        self.state_machine = StateMachine(self.scene)
 
         self.add_nodes()
 
         # create graphics view
-        self.view = QDMGraphicsView(self.scene.gr_scene, self)
+        self.view = QDMGraphicsView(self.scene.gr_scene, self.state_machine, self)
         self.layout().addWidget(self.view)
 
         self.show()
@@ -68,7 +72,8 @@ class NodeEditorWnd(QWidget):
         node2.set_pos(-50, 0)
         node3.set_pos(150, -200)
 
-        edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[1])
+        #edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[1])
+        #edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[2])
 
     def load_stylesheet(self, stylesheet_filename):
         file = QFile(stylesheet_filename)

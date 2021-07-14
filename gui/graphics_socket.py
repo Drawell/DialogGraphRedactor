@@ -2,6 +2,7 @@ from PyQt5.QtCore import QRectF
 from PyQt5.QtGui import QColor, QPen, QBrush
 from PyQt5.QtWidgets import QGraphicsItem
 
+from node_system.socket_position import SocketPosition as sp
 from gui import QDMGraphicsNode
 
 
@@ -21,9 +22,9 @@ class QDMGraphicsSocket(QGraphicsItem):
         self._pen.setWidth(self.outline_width)
         self._brush = QBrush(self._color_background)
 
-    def set_on_position(self, index, is_left_position, is_top_position):
-        x = 0 if is_left_position else self.gr_node.width
-        if is_top_position:
+    def set_on_position(self, index, position):
+        x = 0 if position in [sp.LEFT_TOP, sp.LEFT_BOTTOM] else self.gr_node.width
+        if position in [sp.LEFT_TOP, sp.RIGHT_TOP]:
             y = index * self.socket_spacing + self.gr_node.title_height + self.gr_node.edge_padding
         else:
             y = - index * self.socket_spacing + self.gr_node.height - self.gr_node.edge_padding
@@ -40,3 +41,4 @@ class QDMGraphicsSocket(QGraphicsItem):
         painter.setPen(self._pen)
         painter.setBrush(self._brush)
         painter.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
+

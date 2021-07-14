@@ -1,6 +1,7 @@
-from gui import QDMGraphicsNode
-from gui import QDMNodeContentWidget
-from .socket import Socket, ESocketPosition as esp
+from gui import QDMGraphicsNode, QDMNodeContentWidget
+from .socket import Socket
+from .socket_position import SocketPosition as sp
+from .socket_type import SocketType as st
 
 
 class Node:
@@ -17,11 +18,11 @@ class Node:
         self.outputs = []
 
         for idx, item in enumerate(inputs):
-            socket = Socket(node=self, index=idx, position=esp.LEFT_TOP)
+            socket = Socket(self, idx, sp.LEFT_TOP, st.INPUT)
             self.inputs.append(socket)
 
         for idx, item in enumerate(outputs):
-            socket = Socket(node=self, index=idx, position=esp.RIGHT_TOP)
+            socket = Socket(self, idx, sp.RIGHT_TOP, st.OUTPUT)
             self.outputs.append(socket)
 
     @property
@@ -30,3 +31,9 @@ class Node:
 
     def set_pos(self, x, y):
         self.gr_node.setPos(x, y)
+
+    def update_connected_edges(self):
+        for socket in self.inputs + self.outputs:
+            if socket.has_edge():
+                socket.edge.update_position()
+

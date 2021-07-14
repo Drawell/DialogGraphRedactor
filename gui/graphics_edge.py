@@ -8,7 +8,7 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         super().__init__(parent)
         self.edge = edge
 
-        self._color = QColor('#001000')
+        self._color = QColor('#EEEEEE')
         self._color_selected = QColor('#00ff00')
         self._pen = QPen(self._color)
         self._pen.setWidth(2.0)
@@ -19,7 +19,7 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         self.setZValue(-1)
 
         self.pos_source = [0, 0]
-        self.pos_destination = [200, 100]
+        self.pos_destination = [0, 0]
 
     def set_source(self, x, y):
         self.pos_source = [x, y]

@@ -95,12 +95,14 @@ class QDMGraphicsNode(QGraphicsItem):
 
     def mouseMoveEvent(self, event):
         super().mouseMoveEvent(event)
+        self.node.update_connected_edges()
+
 
         # optimize me! just update the selected nodes
-        for node in self.scene().scene.nodes:
-            if node.gr_node.isSelected():
-                node.updateConnectedEdges()
-        self._was_moved = True
+        #for node in self.scene().scene.nodes:
+        #    if node.gr_node.isSelected():
+        #        node.updateConnectedEdges()
+        #self._was_moved = True
 
     def mouseReleaseEvent(self, event):
         super().mouseReleaseEvent(event)
