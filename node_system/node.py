@@ -9,7 +9,7 @@ class Node:
         self.scene = scene
         self.title = title
 
-        self.content_widget = QDMNodeContentWidget()
+        self.content_widget = QDMNodeContentWidget(self)
         self.gr_node = QDMGraphicsNode(self)
 
         self.scene.add_node(self)
@@ -37,3 +37,8 @@ class Node:
             if socket.has_edge():
                 socket.edge.update_position()
 
+    def remove(self):
+        for socket in self.inputs + self.outputs:
+            socket.remove_edges()
+        self.scene.remove_node(self)
+        self.gr_node = None

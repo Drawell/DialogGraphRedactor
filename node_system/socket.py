@@ -40,3 +40,7 @@ class Socket:
 
     def has_edge(self):
         return self.edge is not None
+
+    def remove_edges(self):
+        if self.has_edge():
+            self.edge.remove()

@@ -18,12 +18,18 @@ class Scene:
         self.gr_scene.addItem(node.gr_node)
 
     def remove_node(self, node):
-        self.nodes.remove(node)
+        if node in self.nodes:
+            self.nodes.remove(node)
+            self.gr_scene.removeItem(node.gr_node)
 
     def add_edge(self, edge):
         self.edges.append(edge)
         self.gr_scene.addItem(edge.gr_edge)
 
     def remove_edge(self, edge):
-        self.edges.remove(edge)
-        self.gr_scene.removeItem(edge.gr_edge)
+        if edge in self.edges:
+            self.edges.remove(edge)
+            self.gr_scene.removeItem(edge.gr_edge)
+
+    def set_editing_flag(self, is_editing: bool):
+        self.gr_scene.views()[0].is_editing = is_editing

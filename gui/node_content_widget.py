@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
 
+from gui.widgets import QDMTextEdit
+
 
 class QDMNodeContentWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, node, parent=None):
         super().__init__(parent)
+        self.node = node
 
         self.init_ui()
 
@@ -15,5 +18,5 @@ class QDMNodeContentWidget(QWidget):
         self.label = QLabel("Some title")
         self.layout.addWidget(self.label)
 
-        self.text_edit = QTextEdit("foo")
+        self.text_edit = QDMTextEdit("foo", self.node)
         self.layout.addWidget(self.text_edit)

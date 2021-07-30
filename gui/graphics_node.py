@@ -2,6 +2,8 @@ from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QFont, QPainterPath, QColor, QPen, QBrush
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsTextItem
 
+from gui.widgets import QDMDeleteButton
+
 
 class QDMGraphicsNode(QGraphicsItem):
     def __init__(self, node, parent=None):
@@ -34,6 +36,7 @@ class QDMGraphicsNode(QGraphicsItem):
 
     def setup_ui(self):
         self.setFlag(QGraphicsItem.ItemIsMovable)
+        self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setAcceptHoverEvents(True)
         self.init_title()
         self.init_content()
@@ -43,6 +46,14 @@ class QDMGraphicsNode(QGraphicsItem):
         self.title_item.setDefaultTextColor(self._title_color)
         self.title_item.setFont(self._title_font)
         self.title = self.node.title
+
+        delete_button_ = QDMDeleteButton()
+        delete_button_.clicked.connect(self.node.remove)
+        self.delete_button = self.node.scene.gr_scene.addWidget(delete_button_)
+        self.delete_button.setParentItem(self)
+        self.delete_button.setGeometry(QRectF(self.width - 25, 0, 25, 25))
+
+        #self.delete_button.setPar
 
     def init_sizes(self):
         self.width = 180
@@ -59,7 +70,8 @@ class QDMGraphicsNode(QGraphicsItem):
 
         self._color = QColor("#7F000000")
         self._color_selected = QColor("#FFFFA637")
-        self._color_hovered = QColor("#FF37A6FF")
+        self._color_hovered = QColor('#FFFFA637')
+        #self._color_hovered = QColor("#FF37A6FF")
 
         self._pen_default = QPen(self._color)
         self._pen_default.setWidthF(2.0)
@@ -97,11 +109,10 @@ class QDMGraphicsNode(QGraphicsItem):
         super().mouseMoveEvent(event)
         self.node.update_connected_edges()
 
-
         # optimize me! just update the selected nodes
-        #for node in self.scene().scene.nodes:
-        #    if node.gr_node.isSelected():
-        #        node.updateConnectedEdges()
+        for node in self.scene().scene.nodes:
+            if node.gr_node.isSelected():
+                node.update_connected_edges()
         #self._was_moved = True
 
     def mouseReleaseEvent(self, event):
@@ -128,7 +139,8 @@ class QDMGraphicsNode(QGraphicsItem):
             self.on_selected()
 
     def mouseDoubleClickEvent(self, event):
-        self.node.onDoubleClicked(event)
+        pass
+        #self.node.onDoubleClicked(event)
 
     def hoverEnterEvent(self, event) -> None:
         self.hovered = True
@@ -137,6 +149,10 @@ class QDMGraphicsNode(QGraphicsItem):
     def hoverLeaveEvent(self, event) -> None:
         self.hovered = False
         self.update()
+
+    def mousePressEvent(self, event) -> None:
+        if event.button() == Qt.LeftButton and Qt.AltModifier & event.modifiers():
+            self.node.remove()
 
     def boundingRect(self) -> QRectF:
         return QRectF(0, 0, self.width, self.height).normalized()

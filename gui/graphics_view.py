@@ -2,8 +2,10 @@ from enum import Enum
 
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtGui import QPainter, QMouseEvent
-from PyQt5.QtWidgets import QGraphicsView
+from PyQt5.QtWidgets import QGraphicsView, QApplication
 
+from . import QDMGraphicsNode
+from .graphics_edge import QDMGraphicsEdge
 from .graphics_socket import QDMGraphicsSocket
 from state_machine.state_machine import StateMachine, ActionResult
 
@@ -29,6 +31,8 @@ class QDMGraphicsView(QGraphicsView):
         self.state_machine = state_machine
         self.mode = Mode.NONE
 
+        self.is_editing = False
+
     def init_ui(self):
         self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing
                             | QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
@@ -36,6 +40,7 @@ class QDMGraphicsView(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setDragMode(QGraphicsView.RubberBandDrag)
 
     def mousePressEvent(self, event) -> None:
         if event.button() == Qt.MiddleButton:
@@ -98,7 +103,6 @@ class QDMGraphicsView(QGraphicsView):
         obj = self.itemAt(pos)
         return obj
 
-
     def wheelEvent(self, event) -> None:
         # calculate zoom factor
         zoom_out_factor = 1 / self.zoom_in_factor
@@ -123,3 +127,23 @@ class QDMGraphicsView(QGraphicsView):
         if not clamped or self.zoom_clamp is False:
             self.scale(zoom_factor, zoom_factor)
 
+    def keyPressEvent(self, event) -> None:
+        if event.key() == Qt.Key_Delete and not self.is_editing:
+            self.delete_selected()
+        elif event.key() == Qt.Key_Alt:
+            QApplication.setOverrideCursor(Qt.CrossCursor)
+        else:
+            super().keyPressEvent(event)
+
+    def keyReleaseEvent(self, event) -> None:
+        if event.key() == Qt.Key_Alt:
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
+        else:
+            super().keyReleaseEvent(event)
+
+    def delete_selected(self):
+        for item in self.gr_scene.selectedItems():
+            if isinstance(item, QDMGraphicsEdge):
+                item.edge.remove()
+            elif isinstance(item, QDMGraphicsNode):
+                item.node.remove()

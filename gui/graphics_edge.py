@@ -27,6 +27,10 @@ class QDMGraphicsEdge(QGraphicsPathItem):
     def set_destination(self, x, y):
         self.pos_destination = [x, y]
 
+    def mousePressEvent(self, event) -> None:
+        if event.button() == Qt.LeftButton and Qt.AltModifier & event.modifiers():
+            self.edge.remove()
+
     def update_path(self):
         raise NotImplemented('Method is not overriden in a child')
 
