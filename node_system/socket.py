@@ -1,11 +1,15 @@
 from gui import QDMGraphicsSocket
+from .serializable import Serializable
 from .socket_type import SocketType as st
 from .socket_position import SocketPosition as sp
 
 
-class Socket:
-    def __init__(self, node, index=0, position=sp.LEFT_TOP, socket_type=st.INPUT):
-        self.node = node
+class Socket(Serializable):
+    serialize_fields = [('index', int), ('position', sp), ('socket_type', st)]
+
+    def __init__(self, node=None, index=0, position=sp.LEFT_TOP, socket_type=st.INPUT, parent=None):
+        super().__init__()
+        self.node = node if node is not None else parent
         self.index = index
         self.position = position
         self.socket_type = socket_type
@@ -44,3 +48,6 @@ class Socket:
     def remove_edges(self):
         if self.has_edge():
             self.edge.remove()
+
+    def serialized_event(self):
+        self.gr_socket.set_on_position(self.index, self.position)

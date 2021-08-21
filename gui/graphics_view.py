@@ -132,6 +132,10 @@ class QDMGraphicsView(QGraphicsView):
             self.delete_selected()
         elif event.key() == Qt.Key_Alt:
             QApplication.setOverrideCursor(Qt.CrossCursor)
+        elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
+            self.gr_scene.scene.save_to_file("graph.json")
+        elif event.key() == Qt.Key_O and event.modifiers() & Qt.ControlModifier:
+            self.gr_scene.scene.load_from_file("graph.json")
         else:
             super().keyPressEvent(event)
 

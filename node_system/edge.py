@@ -1,21 +1,28 @@
 from gui import QDMGraphicsEdgeDirect, QDMGraphicsEdgeBezier
+from node_system.serializable import Serializable
+from node_system.socket import Socket
 
 
-class Edge:
-    def __init__(self, scene, start_socket, end_socket):
-        self.scene = scene
+class Edge(Serializable):
+    serialize_fields = [('start_socket', Socket), ('end_socket', Socket)]
+
+    def __init__(self, scene=None, start_socket=None, end_socket=None, parent=None):
+        super().__init__()
+        self.scene = scene if scene is not None else parent
         self.start_socket = start_socket  # type Socket
         self.end_socket = end_socket  # type Socket
 
-        if self.start_socket is not None:
-            self.start_socket.connect_to_edge(self)
-        if self.start_socket is not None:
-            self.end_socket.connect_to_edge(self)
-
         self.gr_edge = QDMGraphicsEdgeBezier(self)
+        self.connect_sockets()
 
         self.update_position()
         self.scene.add_edge(self)
+
+    def connect_sockets(self):
+        if self.start_socket is not None:
+            self.start_socket.connect_to_edge(self)
+        if self.end_socket is not None:
+            self.end_socket.connect_to_edge(self)
 
     def update_position(self):
         if self.start_socket is not None:
@@ -34,3 +41,8 @@ class Edge:
         self.remove_from_sockets()
         self.scene.remove_edge(self)
         self.gr_edge = None
+
+    def serialized_event(self):
+        self.connect_sockets()
+
+
