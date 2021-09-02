@@ -4,11 +4,10 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QT
 from gui import QDMGraphicsView
 from node_system.node import Node
 from node_system.scene import Scene
-from node_system.edge import Edge
 from state_machine.state_machine import StateMachine
 
 
-class NodeEditorWnd(QWidget):
+class NodeEditorWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.stylesheet_filename = 'qss/node_style.qss'
@@ -16,9 +15,6 @@ class NodeEditorWnd(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setGeometry(300, 300, 800, 600)
-        self.setWindowTitle("Dialog Graph Redactor")
-
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -31,8 +27,6 @@ class NodeEditorWnd(QWidget):
         # create graphics view
         self.view = QDMGraphicsView(self.scene.gr_scene, self.state_machine, self)
         self.layout().addWidget(self.view)
-
-        self.show()
 
         # self.add_debug_content()
 
@@ -72,11 +66,20 @@ class NodeEditorWnd(QWidget):
         node2.set_pos(-50, 0)
         node3.set_pos(150, -200)
 
-        #edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[1])
-        #edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[2])
+        # edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[1])
+        # edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[2])
 
     def load_stylesheet(self, stylesheet_filename):
         file = QFile(stylesheet_filename)
         file.open(QFile.ReadOnly | QFile.Text)
         stylesheet = file.readAll()
         QApplication.instance().setStyleSheet(str(stylesheet, encoding='utf-8'))
+
+    def load_scene_form_file(self, file_name):
+        self.scene.load_from_file(file_name)
+
+    def save_scene_to_file(self, file_name):
+        self.scene.save_to_file(file_name)
+
+    def create_new_scene(self):
+        self.scene.clear()
