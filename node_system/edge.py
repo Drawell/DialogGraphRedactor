@@ -1,5 +1,5 @@
-from gui import QDMGraphicsEdgeDirect, QDMGraphicsEdgeBezier
-from node_system.serializable import Serializable
+from gui import QDMGraphicsEdgeBezier
+from utils import Serializable
 from node_system.socket import Socket
 
 

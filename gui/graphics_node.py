@@ -9,7 +9,6 @@ class QDMGraphicsNode(QGraphicsItem):
     def __init__(self, node, parent=None):
         super().__init__(parent)
         self.node = node
-        self.content_widget = self.node.content_widget
 
         # init our flags
         self.hovered = False
@@ -39,13 +38,12 @@ class QDMGraphicsNode(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setAcceptHoverEvents(True)
         self.init_title()
-        self.init_content()
+        self.update_content()
 
     def init_title(self):
         self.title_item = QGraphicsTextItem(self)
         self.title_item.setDefaultTextColor(self._title_color)
         self.title_item.setFont(self._title_font)
-        self.title = self.node.title
 
         delete_button_ = QDMDeleteButton()
         delete_button_.clicked.connect(self.node.remove)
@@ -83,7 +81,7 @@ class QDMGraphicsNode(QGraphicsItem):
         self._brush_title = QBrush(QColor("#FF313131"))
         self._brush_background = QBrush(QColor("#E3212121"))
 
-    def init_content(self):
+    def update_content(self):
         if self.content is not None:
             self.content.setGeometry(self.edge_padding, self.title_height + self.edge_padding,
                                      self.width - 2 * self.edge_padding,
@@ -96,6 +94,7 @@ class QDMGraphicsNode(QGraphicsItem):
 
     def init_sockets(self):
         pass
+
 
     #def on_selected(self):
     #    self.node_system.scene.grScene.itemSelected.emit()

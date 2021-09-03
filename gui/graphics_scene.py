@@ -27,6 +27,9 @@ class QDMGraphicsScene(QGraphicsScene):
     def set_scene(self, width, height):
         self.setSceneRect(-width // 2, -height // 2, width, height)
 
+    def dragMoveEvent(self, event) -> None:
+        pass
+
     def drawBackground(self, painter, rect):
         super().drawBackground(painter, rect)
 

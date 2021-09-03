@@ -1,20 +1,38 @@
 import os
 
-from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QFileDialog, QMessageBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QFileDialog, QMessageBox, QDockWidget
 
 from gui import NodeEditorWidget
+from gui.drag_node_list import DragNodeList
+from qss.qss_loader import load_style_sheets
 
 
 class NodeEditorWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.current_file_name = None
+
+        load_style_sheets('nodeeditor-dark.qss', 'nodeeditor.qss')
         self.init_ui()
 
     def init_ui(self):
-        menu_bar = self.menuBar()
+        self.init_file_menu()
+        self.init_window_menu()
 
-        file_menu = menu_bar.addMenu('File')
+        self.node_editor_widget = NodeEditorWidget()
+        self.setCentralWidget(self.node_editor_widget)
+
+        self.setGeometry(400, 150, 1000, 800)
+        self.update_title()
+        self.statusBar().show()
+
+        self.init_nodes_dock()
+
+        self.show()
+
+    def init_file_menu(self):
+        file_menu = self.menuBar().addMenu('File')
 
         file_menu.addAction(self.create_action('New', 'Ctrl+N', 'Create new Act', self.on_file_new))
         file_menu.addSeparator()
@@ -25,13 +43,9 @@ class NodeEditorWindow(QMainWindow):
         file_menu.addSeparator()
         file_menu.addAction(self.create_action('Quit', 'Ctrl+Q', 'Exit', self.on_file_quit))
 
-        self.node_editor_widget = NodeEditorWidget()
-        self.setCentralWidget(self.node_editor_widget)
-
-        self.setGeometry(300, 300, 800, 600)
-        self.update_title()
-        self.statusBar().show()
-        self.show()
+    def init_window_menu(self):
+        window_menu = self.menuBar().addMenu('Window')
+        window_menu.addAction(self.create_action('Nodes List', 'Ctrl+L', 'Open Nodes List', self.on_window_list_widget))
 
     def create_action(self, name, shortcut, tooltip, callback):
         action = QAction(name, self)
@@ -47,6 +61,15 @@ class NodeEditorWindow(QMainWindow):
     def update_title(self):
         file_name = self.current_file_name if self.current_file_name is not None else 'Undefined'
         self.setWindowTitle("Dialog Graph Redactor. " + file_name)
+
+    def init_nodes_dock(self):
+        self.nodes_list_widget = DragNodeList(self.node_editor_widget.get_act(), self)
+
+        self.nodes_dock = QDockWidget('Nodes')
+        self.nodes_dock.setWidget(self.nodes_list_widget)
+        self.nodes_dock.setFloating(False)
+
+        self.addDockWidget(Qt.RightDockWidgetArea, self.nodes_dock)
 
     def on_file_new(self):
         self.node_editor_widget.create_new_scene()
@@ -77,7 +100,7 @@ class NodeEditorWindow(QMainWindow):
         pass
 
     def on_file_quit(self):
-        pass
+        self.close()
 
     def closeEvent(self, event) -> None:
         msg_box = QMessageBox(self)
@@ -93,3 +116,6 @@ class NodeEditorWindow(QMainWindow):
             event.ignore()
         else:
             super().closeEvent(event)
+
+    def on_window_list_widget(self):
+        self.nodes_dock.show()

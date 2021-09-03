@@ -9,7 +9,7 @@ class Serializable:
     def __init__(self):
         self.id = id(self)
 
-    def serialize(self, hash_map=None):
+    def serialize(self, hash_map=None, to_upper=False):
         if hash_map is None:
             hash_map = {}
         elif self.id in hash_map:
@@ -17,10 +17,9 @@ class Serializable:
 
         hash_map[self.id] = self.id
 
-        self_as_list = [('id', self.id)]
+        self_as_list = [('id', self.id)] if not to_upper else [('Id', self.id)]
 
         for ser_field, type_ in self.serialize_fields:
-            # ser_field, rule, *dummy_none = tuple(ser_field.split(':') + [None])
             ser_fields = ser_field.split('.')
 
             if len(ser_fields) > 1:
@@ -29,18 +28,26 @@ class Serializable:
             else:
                 attribute = getattr(self, ser_field, None)
 
+            key = ser_field if not to_upper else Serializable._to_camel_case(ser_field)
             if isinstance(attribute, list):
-                self_as_list.append((ser_field, [Serializable._serialize_item(item, hash_map) for item in attribute]))
+                self_as_list.append((key, [Serializable._serialize_item(item, hash_map, to_upper) for item in attribute]))
             else:
-                self_as_list.append((ser_field, Serializable._serialize_item(attribute, hash_map)))
+                self_as_list.append((key, Serializable._serialize_item(attribute, hash_map, to_upper)))
 
         return OrderedDict(self_as_list)
 
     @staticmethod
-    def _serialize_item(attribute, hash_map):
+    def _to_camel_case(snake_str):
+        components = snake_str.split('_')
+        result = ''.join(x.title() for x in components)
+        return result
+
+    @staticmethod
+    def _serialize_item(attribute, hash_map, to_upper):
         if isinstance(attribute, Serializable):
             if attribute.id in hash_map:
-                return {'id': attribute.id}
+                key = 'id' if not to_upper else 'Id'
+                return {key: attribute.id}
             return attribute.serialize(hash_map)
         elif isinstance(attribute, Enum):
             return attribute.value
@@ -50,10 +57,6 @@ class Serializable:
             return attribute
         else:
             return None
-
-    def _handle_rule(self, attribute, rule):
-        if rule == 'e':
-            return attribute.value
 
     def deserialize(self, data, hash_map=None):
         if hash_map is None:
@@ -84,7 +87,9 @@ class Serializable:
         return result
 
     def _deserialize_item(self, type_, data, hash_map):
-        if issubclass(type_, Serializable):
+        if type_ is None:  # only id have
+            pass
+        elif issubclass(type_, Serializable):
             # constructor_params = Serializable._find_constructor_params(type_, hash_map)
             item_id = data['id']
             if item_id in hash_map:
@@ -97,9 +102,6 @@ class Serializable:
 
             new_item.deserialize(data, hash_map)
             new_item.serialized_event()
-
-        # elif issubclass(type_, Enum):
-        #   pass
         else:
             new_item = type_(data)
 

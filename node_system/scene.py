@@ -1,17 +1,22 @@
 import json
+
+from PyQt5.QtCore import QPoint
+
+from acts_system import Act
 from gui.graphics_scene import QDMGraphicsScene
 from node_system.edge import Edge
 from node_system.node import Node
-from node_system.serializable import Serializable
+from utils import Serializable
 
 
 class Scene(Serializable):
-    serialize_fields = [('scene_width', float), ('scene_height', float), ('nodes', Node), ('edges', Edge)]
+    serialize_fields = [('act', Act), ('scene_width', float), ('scene_height', float), ('nodes', Node), ('edges', Edge)]
 
     def __init__(self):
         super().__init__()
         self.nodes = []
         self.edges = []
+        self.act = Act(self)
 
         self.scene_width, self.scene_height = 64000, 64000
         self.setup_ui()
@@ -20,11 +25,18 @@ class Scene(Serializable):
         self.gr_scene = QDMGraphicsScene(self)
         self.gr_scene.set_scene(self.scene_width, self.scene_height)
 
+    def add_drag_enter_listener(self, callback):
+        self.gr_scene.views()[0].add_drag_enter_listener(callback)
+
+    def add_drop_listener(self, callback):
+        self.gr_scene.views()[0].add_drop_listener(callback)
+
     def add_node(self, node):
         self.nodes.append(node)
         self.gr_scene.addItem(node.gr_node)
 
     def remove_node(self, node):
+        self.act.remove_node(node.content_widget)
         if node in self.nodes:
             self.nodes.remove(node)
             self.gr_scene.removeItem(node.gr_node)
@@ -39,11 +51,15 @@ class Scene(Serializable):
             self.gr_scene.removeItem(edge.gr_edge)
 
     def clear(self):
+        self.act.clear()
         while len(self.nodes) > 0:
             self.nodes[0].remove()
 
     def set_editing_flag(self, is_editing: bool):
         self.gr_scene.views()[0].is_editing = is_editing
+
+    def mouse_pos_to_view_pos(self, x, y):
+        return self.gr_scene.views()[0].mapToScene(QPoint(x, y))
 
     def save_to_file(self, filename):
         with open(filename, 'w') as file:
@@ -57,24 +73,3 @@ class Scene(Serializable):
             data = json.loads(raw_data)
             self.deserialize(data)
             pass
-
-
-
-    '''def serialize(self):
-        return OrderedDict([
-            ('id', self.id),
-            ('scene_width', self.scene_width),
-            ('scene_height', self.scene_height),
-        ])'''
-    '''
-    def deserialize(self, data, hash_map={}):
-        self.clear()
-        hash_map = {}
-
-        for node_data in data['nodes']:
-            pass
-
-
-        print('deserialize')
-        pass
-    '''

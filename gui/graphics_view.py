@@ -33,6 +33,9 @@ class QDMGraphicsView(QGraphicsView):
 
         self.is_editing = False
 
+        self._drag_enter_listeners = []
+        self._drop_listeners = []
+
     def init_ui(self):
         self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing
                             | QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
@@ -41,6 +44,15 @@ class QDMGraphicsView(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
         self.setDragMode(QGraphicsView.RubberBandDrag)
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, event) -> None:
+        for callback in self._drag_enter_listeners:
+            callback(event)
+
+    def dropEvent(self, event) -> None:
+        for callback in self._drop_listeners:
+            callback(event)
 
     def mousePressEvent(self, event) -> None:
         if event.button() == Qt.MiddleButton:
@@ -132,10 +144,6 @@ class QDMGraphicsView(QGraphicsView):
             self.delete_selected()
         elif event.key() == Qt.Key_Alt:
             QApplication.setOverrideCursor(Qt.CrossCursor)
-        #elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
-        #   self.gr_scene.scene.save_to_file("graph.json")
-        #elif event.key() == Qt.Key_O and event.modifiers() & Qt.ControlModifier:
-        #    self.gr_scene.scene.load_from_file("graph.json")
         else:
             super().keyPressEvent(event)
 
@@ -151,3 +159,9 @@ class QDMGraphicsView(QGraphicsView):
                 item.edge.remove()
             elif isinstance(item, QDMGraphicsNode):
                 item.node.remove()
+
+    def add_drag_enter_listener(self, callback):
+        self._drag_enter_listeners.append(callback)
+
+    def add_drop_listener(self, callback):
+        self._drop_listeners.append(callback)

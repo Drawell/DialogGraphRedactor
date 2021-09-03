@@ -1,19 +1,21 @@
-from gui import QDMGraphicsNode, QDMNodeContentWidget
-from .serializable import Serializable
+from gui import QDMGraphicsNode, ActNodeWidget
+from utils import Serializable
 from .socket import Socket
 from .socket_position import SocketPosition as sp
 from .socket_type import SocketType as st
 
 
 class Node(Serializable):
-    serialize_fields = [('scene.id', int), ('title', str), ('x', float), ('y', float), ('inputs', Socket), ('outputs', Socket)]
+    serialize_fields = [('content_widget', Serializable), ('scene.id', int), ('x', float), ('y', float),
+                        ('inputs', Socket),
+                        ('outputs', Socket)]
 
-    def __init__(self, scene=None, title='Undefined', inputs=[], outputs=[], parent=None):
+    def __init__(self, scene=None, outputs_count=1, parent=None):
         super().__init__()
         self.scene = scene if scene is not None else parent
-        self.title = title
+        self.act = self.scene.act
 
-        self.content_widget = QDMNodeContentWidget(self)
+        self._content_widget = None  # type: ActNodeWidget
         self.gr_node = QDMGraphicsNode(self)
 
         self.scene.add_node(self)
@@ -21,13 +23,23 @@ class Node(Serializable):
         self.inputs = []
         self.outputs = []
 
-        for idx, item in enumerate(inputs):
-            socket = Socket(self, idx, sp.LEFT_TOP, st.INPUT)
-            self.inputs.append(socket)
+        socket = Socket(self, 0, sp.LEFT_TOP, st.INPUT)
+        self.inputs.append(socket)
 
-        for idx, item in enumerate(outputs):
+        for idx in range(outputs_count):
             socket = Socket(self, idx, sp.RIGHT_TOP, st.OUTPUT)
             self.outputs.append(socket)
+
+    @property
+    def content_widget(self) -> ActNodeWidget:
+        return self._content_widget
+
+    @content_widget.setter
+    def content_widget(self, value: ActNodeWidget):
+        self._content_widget = value
+        if self._content_widget is not None:
+            self.gr_node.title = self._content_widget.get_name()
+            self.gr_node.update_content()
 
     @property
     def position(self):
@@ -63,5 +75,5 @@ class Node(Serializable):
         self.scene.remove_node(self)
         self.gr_node = None
 
-    def serialized_event(self):
-        self.gr_node.title = self.title
+    #def serialized_event(self):
+    #    self.gr_node.title = self.title

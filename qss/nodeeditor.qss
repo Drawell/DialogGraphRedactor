@@ -1,0 +1,37 @@
+ActNodeWidget {
+  background: transparent;
+}
+
+ActNodeWidget QTextEdit,
+ActNodeWidget QLineEdit {
+  background: #666666;
+  color: #ffffff;
+}
+ActNodeWidget QLabel {
+  color: #e0e0e0;
+}
+
+QGraphicsView {
+  selection-background-color: #ffffff;
+}
+
+QLabel { color: #e0e0e0; }
+QGraphicsView { selection-background-color: #ffffff; }
+
+QDMDeleteButton {
+    font-weight: bold;
+    font-size: 10pt;
+    color: #ee0000;
+    background-color:rgba(0,0,0,0);
+    padding: 1px 5px 7px 7px;
+    }
+
+QDMDeleteButton:hover {
+    color: #ee5555;
+}
+
+ActNodeWidget QDMTextEdit {
+    font-size: 10pt;
+    color: #000000;
+    background-color: #000000;
+}

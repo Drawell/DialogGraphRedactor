@@ -1,5 +1,5 @@
 from gui import QDMGraphicsSocket
-from .serializable import Serializable
+from utils import Serializable
 from .socket_type import SocketType as st
 from .socket_position import SocketPosition as sp
 
