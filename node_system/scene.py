@@ -26,10 +26,10 @@ class Scene(Serializable):
         self.gr_scene.set_scene(self.scene_width, self.scene_height)
 
     def add_drag_enter_listener(self, callback):
-        self.gr_scene.views()[0].add_drag_enter_listener(callback)
+        self.get_view().add_drag_enter_listener(callback)
 
     def add_drop_listener(self, callback):
-        self.gr_scene.views()[0].add_drop_listener(callback)
+        self.get_view().add_drop_listener(callback)
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -56,10 +56,16 @@ class Scene(Serializable):
             self.nodes[0].remove()
 
     def set_editing_flag(self, is_editing: bool):
-        self.gr_scene.views()[0].is_editing = is_editing
+        self.get_view().is_editing = is_editing
 
     def mouse_pos_to_view_pos(self, x, y):
-        return self.gr_scene.views()[0].mapToScene(QPoint(x, y))
+        return self.get_view().mapToScene(QPoint(x, y))
+
+    def get_item_at(self, position):
+        return self.get_view().itemAt(position)
+
+    def get_view(self):
+        return self.gr_scene.views()[0]
 
     def save_to_file(self, filename):
         with open(filename, 'w') as file:

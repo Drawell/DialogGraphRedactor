@@ -61,6 +61,10 @@ class Node(Serializable):
     def y(self, value):
         self.gr_node.setY(value)
 
+    @property
+    def input(self):
+        return self.inputs[0] if len(self.inputs) > 0 else None
+
     def set_pos(self, x, y):
         self.gr_node.setPos(x, y)
 

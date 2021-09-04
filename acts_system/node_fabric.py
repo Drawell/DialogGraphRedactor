@@ -1,4 +1,3 @@
-from acts_system import Act
 from node_system.node import Node
 
 
@@ -14,5 +13,6 @@ class NodeFabric:
 
                 pos = scene.mouse_pos_to_view_pos(x, y)
                 node.set_pos(pos.x(), pos.y())
+                return node
 
-
+        return None

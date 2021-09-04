@@ -1,6 +1,7 @@
 from enum import Enum
 
 from gui import QDMGraphicsSocket
+from node_system.socket import Socket
 from node_system.socket_type import SocketType as st
 from node_system.edge import Edge
 
@@ -21,6 +22,12 @@ class StateMachine:
         self.scene = scene
         self.state = State.NONE
         self.dragging_edge = None  # type Edge
+
+    def is_dragging_to_input(self):
+        return self.state == State.EDGE_DRAG_TO_INPUT
+
+    def is_dragging_to_output(self):
+        return self.state == State.EDGE_DRAG_TO_OUTPUT
 
     def on_mouse_left_press(self, item) -> ActionResult:
         if type(item) == QDMGraphicsSocket:
@@ -49,8 +56,13 @@ class StateMachine:
 
     def on_mouse_left_release(self, item) -> ActionResult:
         if self.state in [State.EDGE_DRAG_TO_OUTPUT, State.EDGE_DRAG_TO_INPUT]:
+            socket = None
             if type(item) is QDMGraphicsSocket:
                 socket = item.socket  # type Socket
+            elif type(item) is Socket:
+                socket = item
+
+            if socket is not None:
                 if socket.socket_type == st.INPUT and self.state == State.EDGE_DRAG_TO_INPUT \
                         or socket.socket_type == st.OUTPUT and self.state == State.EDGE_DRAG_TO_OUTPUT:
                     socket.connect_to_edge(self.dragging_edge)

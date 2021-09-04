@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QFile
-from PyQt5.QtGui import QBrush, QPen, QFont, QColor
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit, QApplication
+from PyQt5.QtGui import QBrush, QPen, QFont, QColor, QIcon
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit, QApplication, QMenu, QAction
 
 from acts_system.node_fabric import NodeFabric
 from gui import QDMGraphicsView
@@ -15,6 +15,7 @@ class NodeEditorWidget(QWidget):
         super().__init__(parent)
         self.init_ui()
         self.init_drag_drop()
+        self.init_context_menu_actions()
 
     def init_ui(self):
         self.setLayout(QVBoxLayout())
@@ -27,6 +28,12 @@ class NodeEditorWidget(QWidget):
         # create graphics view
         self.view = QDMGraphicsView(self.scene.gr_scene, self.state_machine, self)
         self.layout().addWidget(self.view)
+
+    def init_context_menu_actions(self):
+        self.context_menu_actions = []
+        for node_class in self.get_act().get_node_class_list():
+            action = QAction(QIcon(node_class.get_image()), node_class.get_name())
+            self.context_menu_actions.append(action)
 
     def init_drag_drop(self):
         self.scene.add_drag_enter_listener(self.on_drag_enter)
@@ -60,3 +67,26 @@ class NodeEditorWidget(QWidget):
 
     def create_new_scene(self):
         self.scene.clear()
+
+    def contextMenuEvent(self, event) -> None:
+        try:
+            item = self.scene.get_item_at(event.pos())
+            if item is None:
+                self.handle_new_node_context_menu(event)
+        except Exception as e:
+            pass
+
+    def handle_new_node_context_menu(self, event):
+        context_menu_new_node = QMenu(self)
+        for action in self.context_menu_actions:
+            context_menu_new_node.addAction(action)
+        action = context_menu_new_node.exec_(self.mapToGlobal(event.pos()))
+
+        if action is not None:
+            class_name = action.text()
+            mouse_pos = event.pos()
+            node = NodeFabric.add_node_to_scene(self.scene, class_name, mouse_pos.x(), mouse_pos.y())
+            if node is not None and self.state_machine.is_dragging_to_input():
+                self.state_machine.on_mouse_left_release(node.input)
+            print(action)
+        print(event)
