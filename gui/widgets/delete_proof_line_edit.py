@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QTextEdit
+from PyQt5.QtWidgets import QLineEdit
 
 
-class QDMTextEdit(QTextEdit):
+class DeleteProofLineEdit(QLineEdit):
     def __init__(self, text, node, parent=None):
         super().__init__(text, parent=parent)
         self.node = node

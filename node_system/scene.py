@@ -68,13 +68,13 @@ class Scene(Serializable):
         return self.gr_scene.views()[0]
 
     def save_to_file(self, filename):
-        with open(filename, 'w') as file:
-            file.write(json.dumps(self.serialize(), indent=4))
+        with open(filename, 'w', encoding='utf8') as file:
+            file.write(json.dumps(self.serialize(), indent=4, ensure_ascii=False))
 
     def load_from_file(self, filename):
         self.clear()
 
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding='utf8') as file:
             raw_data = file.read()
             data = json.loads(raw_data)
             self.deserialize(data)

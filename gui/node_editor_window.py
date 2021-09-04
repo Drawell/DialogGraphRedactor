@@ -1,6 +1,7 @@
 import os
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QFileDialog, QMessageBox, QDockWidget
 
 from gui import NodeEditorWidget
@@ -29,6 +30,7 @@ class NodeEditorWindow(QMainWindow):
 
         self.init_nodes_dock()
 
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'icons', 'favicon.png')))
         self.show()
 
     def init_file_menu(self):

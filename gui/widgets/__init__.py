@@ -1,2 +1,3 @@
 from .delete_button import QDMDeleteButton
-from .notifier_text_edit import QDMTextEdit
+from .delete_proof_text_edit import DeleteProofTextEdit
+from .delete_proof_line_edit import DeleteProofLineEdit

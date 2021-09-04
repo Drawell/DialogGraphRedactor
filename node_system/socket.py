@@ -51,3 +51,8 @@ class Socket(Serializable):
 
     def serialized_event(self):
         self.gr_socket.set_on_position(self.index, self.position)
+
+    def remove(self):
+        self.remove_edges()
+        self.node.scene.gr_scene.removeItem(self.gr_socket)
+        self.gr_socket = None

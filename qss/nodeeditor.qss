@@ -2,6 +2,12 @@ ActNodeWidget {
   background: transparent;
 }
 
+ActNodeWidget QScrollArea,
+ActNodeWidget QWidget
+{
+   background: transparent;
+}
+
 ActNodeWidget QTextEdit,
 ActNodeWidget QLineEdit {
   background: #666666;
@@ -30,8 +36,9 @@ QDMDeleteButton:hover {
     color: #ee5555;
 }
 
-ActNodeWidget QDMTextEdit {
+ActNodeWidget DeleteProofTextEdit {
     font-size: 10pt;
     color: #000000;
-    background-color: #000000;
+    background-color: #ffffff;
 }
+

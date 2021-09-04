@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QFont, QPainterPath, QColor, QPen, QBrush
-from PyQt5.QtWidgets import QGraphicsItem, QGraphicsTextItem
+from PyQt5.QtWidgets import QGraphicsItem, QGraphicsTextItem, QGraphicsPixmapItem
 
 from gui.widgets import QDMDeleteButton
 
@@ -41,9 +41,13 @@ class QDMGraphicsNode(QGraphicsItem):
         self.update_content()
 
     def init_title(self):
+        self.icon = QGraphicsPixmapItem(self)
+        self.icon.setPos(5, 2)
+
         self.title_item = QGraphicsTextItem(self)
         self.title_item.setDefaultTextColor(self._title_color)
         self.title_item.setFont(self._title_font)
+        self.title_item.setPos(32, 0)
 
         delete_button_ = QDMDeleteButton()
         delete_button_.clicked.connect(self.node.remove)
@@ -51,11 +55,9 @@ class QDMGraphicsNode(QGraphicsItem):
         self.delete_button.setParentItem(self)
         self.delete_button.setGeometry(QRectF(self.width - 25, 0, 25, 25))
 
-        #self.delete_button.setPar
-
     def init_sizes(self):
-        self.width = 180
-        self.height = 240
+        self.width = 200
+        self.height = 260
         self.edge_roundness = 10.0
         self.edge_padding = 10.0
         self.title_height = 24.0
@@ -87,14 +89,14 @@ class QDMGraphicsNode(QGraphicsItem):
                                      self.width - 2 * self.edge_padding,
                                      self.height - 2 * self.edge_padding - self.title_height)
 
-        # get the QGraphicsProxyWidget when inserted into the grScene
-        self.gr_content = self.node.scene.gr_scene.addWidget(self.content)
-        self.gr_content.node = self.node
-        self.gr_content.setParentItem(self)
+            img = self.content.get_image().scaled(23, 23)
+            self.icon.setPixmap(img)
+            self.gr_content = self.node.scene.gr_scene.addWidget(self.content)
+            self.gr_content.node = self.node
+            self.gr_content.setParentItem(self)
 
     def init_sockets(self):
         pass
-
 
     #def on_selected(self):
     #    self.node_system.scene.grScene.itemSelected.emit()

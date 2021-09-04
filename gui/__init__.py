@@ -1,5 +1,4 @@
 from .graphics_node import QDMGraphicsNode
-from .act_node_widget import ActNodeWidget
 from .graphics_edge import QDMGraphicsEdgeDirect, QDMGraphicsEdgeBezier
 from .graphics_scene import QDMGraphicsScene
 from .graphics_socket import QDMGraphicsSocket
