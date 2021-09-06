@@ -11,17 +11,19 @@ class Act(Serializable):
         self.scene = scene if scene is not None else parent
         self.tale_name = 'Undefined'
         self.act_id = 0
-
         self.characters = []
         self.start_nodes = []
         self.character_appearances = []
         self.choice_nodes = []
         self.replicas = []
         self.end_nodes = []
+        self.serialized_event()
+        #self.clear()
 
+
+    def serialized_event(self):
         self.nodes = {StartNode.get_name(): self.start_nodes,
                       Replica.get_name(): self.replicas,
-
                       }
 
     def add_node(self, node):
@@ -34,8 +36,8 @@ class Act(Serializable):
         if name == Replica.get_name():
             self.replicas.remove(node)
 
-    def clear(self):
-        pass
-
     def get_node_class_list(self):
         return [Replica, StartNode]
+
+    def clear(self):
+        pass

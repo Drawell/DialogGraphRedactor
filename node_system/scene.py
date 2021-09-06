@@ -71,6 +71,10 @@ class Scene(Serializable):
         with open(filename, 'w', encoding='utf8') as file:
             file.write(json.dumps(self.serialize(), indent=4, ensure_ascii=False))
 
+    def export_act_to_file(self, filename):
+        with open(filename, 'w', encoding='utf8') as file:
+            file.write(json.dumps(self.act.serialize(to_upper=True), indent=4, ensure_ascii=False))
+
     def load_from_file(self, filename):
         self.clear()
 

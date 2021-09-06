@@ -65,6 +65,9 @@ class NodeEditorWidget(QWidget):
     def save_scene_to_file(self, file_name):
         self.scene.save_to_file(file_name)
 
+    def export_act_to_file(self, file_name):
+        self.scene.export_act_to_file(file_name)
+
     def create_new_scene(self):
         self.scene.clear()
 
@@ -88,5 +91,3 @@ class NodeEditorWidget(QWidget):
             node = NodeFabric.add_node_to_scene(self.scene, class_name, mouse_pos.x(), mouse_pos.y())
             if node is not None and self.state_machine.is_dragging_to_input():
                 self.state_machine.on_mouse_left_release(node.input)
-            print(action)
-        print(event)

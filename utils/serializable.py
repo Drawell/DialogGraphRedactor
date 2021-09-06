@@ -48,7 +48,7 @@ class Serializable:
             if attribute.id in hash_map:
                 key = 'id' if not to_upper else 'Id'
                 return {key: attribute.id}
-            return attribute.serialize(hash_map)
+            return attribute.serialize(hash_map, to_upper)
         elif isinstance(attribute, Enum):
             return attribute.value
         elif hasattr(attribute, '__call__'):
