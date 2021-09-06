@@ -1,11 +1,10 @@
-from PyQt5.QtCore import Qt, QFile
-from PyQt5.QtGui import QBrush, QPen, QFont, QColor, QIcon
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsItem, QPushButton, QTextEdit, QApplication, QMenu, QAction
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenu, QAction
 
 from acts_system.node_fabric import NodeFabric
 from gui import QDMGraphicsView
 from gui.configs import LISTBOX_MIMETYPE
-from node_system.node import Node
 from node_system.scene import Scene
 from state_machine.state_machine import StateMachine
 

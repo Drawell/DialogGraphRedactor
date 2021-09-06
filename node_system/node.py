@@ -108,7 +108,8 @@ class Node(Serializable):
             edge.start_node().disconnect_output(edge)
 
     def disconnect_output(self, edge):
-        self.content_widget.remove_next_node(edge.end_node().content_widget)
+        if edge.end_node() is not None:
+            self.content_widget.remove_next_node(edge.end_node().content_widget)
 
     def __str__(self):
         return f'Node: {self.id}, ({str(self.content_widget)})'

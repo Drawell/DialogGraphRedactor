@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QSize, Qt, QMimeData, QByteArray, QDataStream, QIODevice, QPoint
+from PyQt5.QtCore import QSize, Qt, QMimeData, QByteArray, QPoint
 from PyQt5.QtGui import QIcon, QDrag
 from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
 

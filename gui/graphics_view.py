@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QGraphicsView, QApplication
 
 from . import QDMGraphicsNode
 from .graphics_edge import QDMGraphicsEdge
-from .graphics_socket import QDMGraphicsSocket
 from state_machine.state_machine import StateMachine, ActionResult
 
 

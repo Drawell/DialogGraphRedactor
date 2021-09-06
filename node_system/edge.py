@@ -9,8 +9,8 @@ class Edge(Serializable):
     def __init__(self, scene=None, start_socket=None, end_socket=None, parent=None):
         super().__init__()
         self.scene = scene if scene is not None else parent
-        self.start_socket = start_socket  # type Socket
-        self.end_socket = end_socket  # type Socket
+        self.start_socket = start_socket  # type: Socket
+        self.end_socket = end_socket  # type: Socket
 
         self.gr_edge = QDMGraphicsEdgeBezier(self)
         self.connect_sockets()

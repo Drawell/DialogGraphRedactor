@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QPointF, Qt, QRectF
+from PyQt5.QtCore import QPointF, Qt
 from PyQt5.QtGui import QPen, QColor, QPainterPath
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPathItem
 
@@ -31,8 +31,17 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         if event.button() == Qt.LeftButton and Qt.AltModifier & event.modifiers():
             self.edge.remove()
 
-    def update_path(self):
+    def boundingRect(self):
+        return self.shape().boundingRect()
+
+    def shape(self):
+        return self.calc_path()
+
+    def calc_path(self):
         raise NotImplemented('Method is not overriden in a child')
+
+    def update_path(self):
+        self.setPath(self.calc_path())
 
     def paint(self, painter, option, widget=...) -> None:
         self.update_path()
@@ -42,14 +51,14 @@ class QDMGraphicsEdge(QGraphicsPathItem):
 
 
 class QDMGraphicsEdgeDirect(QDMGraphicsEdge):
-    def update_path(self):
+    def calc_path(self):
         path = QPainterPath(QPointF(self.pos_source[0], self.pos_source[1]))
         path.lineTo(self.pos_destination[0], self.pos_destination[1])
-        self.setPath(path)
+        return path
 
 
 class QDMGraphicsEdgeBezier(QDMGraphicsEdge):
-    def update_path(self):
+    def calc_path(self):
         dist = (self.pos_destination[0] - self.pos_source[0]) * 0.5
         if self.pos_source[0] > self.pos_destination[0]:
             dist *= -1
@@ -57,4 +66,4 @@ class QDMGraphicsEdgeBezier(QDMGraphicsEdge):
         path = QPainterPath(QPointF(self.pos_source[0], self.pos_source[1]))
         path.cubicTo(self.pos_source[0] + dist, self.pos_source[1], self.pos_destination[0] - dist,
                      self.pos_destination[1], self.pos_destination[0], self.pos_destination[1])
-        self.setPath(path)
+        return path

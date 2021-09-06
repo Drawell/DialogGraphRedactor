@@ -38,18 +38,7 @@ class StateMachine:
                     self._handle_moving_edge(socket)
                 else:
                     self._handle_creating_edge(socket)
-                '''    
-                self.dragging_edge = Edge(self.scene, None, None) if socket.edge is None else socket.edge
-                x, y = tuple(socket.get_socket_global_position())
-                if socket.socket_type == st.OUTPUT:
-                    self.state = State.EDGE_DRAG_TO_INPUT
-                    self.dragging_edge.gr_edge.set_destination(x, y)
-                else:
-                    self.dragging_edge.gr_edge.set_source(x, y)
-                    self.state = State.EDGE_DRAG_TO_OUTPUT
 
-                socket.connect_to_edge(self.dragging_edge)
-                '''
                 return ActionResult.INTERRUPT_PARENT_ACTION
 
         return ActionResult.CONTINUE_PARENT_ACTION
@@ -58,7 +47,7 @@ class StateMachine:
         if self.state in [State.EDGE_DRAG_TO_OUTPUT, State.EDGE_DRAG_TO_INPUT]:
             socket = None
             if type(item) is QDMGraphicsSocket:
-                socket = item.socket  # type Socket
+                socket = item.socket  # type: Socket
             elif type(item) is Socket:
                 socket = item
 

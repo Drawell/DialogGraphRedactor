@@ -30,6 +30,12 @@ class QDMGraphicsNode(QGraphicsItem):
 
     @title.setter
     def title(self, value):
+        if len(value) > 17:
+            pos = [i for i, e in enumerate(value + 'A') if e.isupper()]
+            parts = [value[pos[j]:pos[j + 1]] for j in range(len(pos) - 1)]
+            value = '\n'.join(parts)
+            self.title_height += 20
+
         self._title = value
         self.title_item.setPlainText(self.title)
 
@@ -56,7 +62,7 @@ class QDMGraphicsNode(QGraphicsItem):
         self.delete_button.setGeometry(QRectF(self.width - 25, 0, 25, 25))
 
     def init_sizes(self):
-        self.width = 200
+        self.width = 210
         self.height = 260
         self.edge_roundness = 10.0
         self.edge_padding = 10.0

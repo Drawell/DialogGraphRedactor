@@ -2,9 +2,9 @@ from os import path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIntValidator
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit, QScrollArea
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
 
-from gui.widgets import DeleteProofTextEdit, DeleteProofLineEdit
+from gui.widgets import DeleteProofLineEdit
 from node_system.node import Node
 from utils import Serializable
 
@@ -79,13 +79,13 @@ class ActNodeWidget(QWidget, Serializable):
 
         self.layout.addWidget(QLabel('Initial Delay:'))
         self.initial_delay_edit = DeleteProofLineEdit(str(self._initial_delay), self.node)
-        self.initial_delay_edit.setValidator(QIntValidator(-1, 10000, self))
+        self.initial_delay_edit.setValidator(QIntValidator(-10, 10000, self))
         self.initial_delay_edit.textChanged.connect(self.on_initial_delay_changed)
         self.layout.addWidget(self.initial_delay_edit)
 
         self.layout.addWidget(QLabel('AutoSkipDelay:'))
         self.auto_skip_delay_edit = DeleteProofLineEdit(str(self.auto_skip_delay), self.node)
-        self.auto_skip_delay_edit.setValidator(QIntValidator(-1, 10000, self))
+        self.auto_skip_delay_edit.setValidator(QIntValidator(-10, 10000, self))
         self.auto_skip_delay_edit.textChanged.connect(self.on_auto_skip_delay_changed)
         self.layout.addWidget(self.auto_skip_delay_edit)
 
@@ -96,10 +96,12 @@ class ActNodeWidget(QWidget, Serializable):
         self._auto_skip_delay = int(self.auto_skip_delay_edit.text())
 
     def add_next_node(self, next_act_node):
+        if next_act_node.id in self.next_nodes_id:
+            return
         self.next_nodes_id.append(next_act_node.id)
 
     def remove_next_node(self, next_act_node):
-        if next_act_node is None:
+        if next_act_node is None or next_act_node.id not in self.next_nodes_id:
             return
         self.next_nodes_id.remove(next_act_node.id)
 

@@ -12,7 +12,6 @@ class StartNode(ActNodeWidget):
         self._act_num = 1
         self._act_name = 'No Name'
         super().__init__(node, parent)
-        #self.node.remove_input()
         self.act_num = 1
         self.act_name = 'No Name'
 
