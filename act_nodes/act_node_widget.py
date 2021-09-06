@@ -28,8 +28,7 @@ class ActNodeWidget(QWidget, Serializable):
             self.node = node
             self.node.content_widget = self
 
-        #self.node = node if node is not None else None
-
+        # self.node = node if node is not None else None
 
         self.next_nodes_id = []
 
@@ -78,7 +77,6 @@ class ActNodeWidget(QWidget, Serializable):
         proxy_widget.setLayout(self.layout)
         scroll_area.setWidget(proxy_widget)
 
-
         self.layout.addWidget(QLabel('Initial Delay:'))
         self.initial_delay_edit = DeleteProofLineEdit(str(self._initial_delay), self.node)
         self.initial_delay_edit.setValidator(QIntValidator(-1, 10000, self))
@@ -91,18 +89,19 @@ class ActNodeWidget(QWidget, Serializable):
         self.auto_skip_delay_edit.textChanged.connect(self.on_auto_skip_delay_changed)
         self.layout.addWidget(self.auto_skip_delay_edit)
 
-
-        # self.label = QLabel("Some title")
-        # self.layout.addWidget(self.label)
-
     def on_initial_delay_changed(self):
         self._initial_delay = int(self.initial_delay_edit.text())
 
     def on_auto_skip_delay_changed(self):
         self._auto_skip_delay = int(self.auto_skip_delay_edit.text())
 
-    def connect_to_socket(self, socket):
-        pass
+    def add_next_node(self, next_act_node):
+        self.next_nodes_id.append(next_act_node.id)
+
+    def remove_next_node(self, next_act_node):
+        if next_act_node is None:
+            return
+        self.next_nodes_id.remove(next_act_node.id)
 
     @property
     def actual_class_name(self):
@@ -124,3 +123,6 @@ class ActNodeWidget(QWidget, Serializable):
     def load_from_icons(image):
         return QPixmap(path.join(path.dirname(__file__), 'icons', image)) \
             .scaled(ActNodeWidget.ICON_SIZE, ActNodeWidget.ICON_SIZE)
+
+    def __str__(self):
+        return self.get_name()

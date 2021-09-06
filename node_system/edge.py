@@ -42,7 +42,19 @@ class Edge(Serializable):
         self.scene.remove_edge(self)
         self.gr_edge = None
 
+    def start_node(self):
+        if self.start_socket:
+            return self.start_socket.node
+        return None
+
+    def end_node(self):
+        if self.end_socket:
+            return self.end_socket.node
+        return None
+
     def serialized_event(self):
         self.connect_sockets()
 
+    def __str__(self):
+        return f'Edge: {self.id} (Start {self.start_node()}, End {self.end_node()})'
 

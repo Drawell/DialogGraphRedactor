@@ -28,19 +28,24 @@ class Socket(Serializable):
         self.edge = edge
         if self.socket_type == st.OUTPUT:
             self.edge.start_socket = self
+            self.node.connect_output(self.edge)
         elif self.socket_type == st.INPUT:
             self.edge.end_socket = self
+            self.node.connect_input(self.edge)
 
         self.edge.update_position()
 
     def disconnect(self):
         if self.edge is not None:
             if self.socket_type == st.OUTPUT:
+                self.node.disconnect_output(self.edge)
                 self.edge.start_socket = None
             else:
+                self.node.disconnect_input(self.edge)
                 self.edge.end_socket = None
 
         self.edge = None
+
 
     def has_edge(self):
         return self.edge is not None
@@ -56,3 +61,6 @@ class Socket(Serializable):
         self.remove_edges()
         self.node.scene.gr_scene.removeItem(self.gr_socket)
         self.gr_socket = None
+
+    def __str__(self):
+        return f'Socket {self.socket_type}: {self.id}'

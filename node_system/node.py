@@ -1,5 +1,6 @@
 from gui import QDMGraphicsNode
 from utils import Serializable
+from .edge import Edge
 from .socket import Socket
 from .socket_position import SocketPosition as sp
 from .socket_type import SocketType as st
@@ -91,11 +92,23 @@ class Node(Serializable):
                 socket = Socket(self, len(self.outputs), sp.RIGHT_TOP, st.OUTPUT)
                 self.outputs.append(socket)
 
-    def remove_input(self):
-        if len(self.inputs) > 0:
-            self.inputs[0].remove()
-            self.inputs = []
-
     def remove_output(self, idx=-1):
-
         pass
+
+    def connect_input(self, edge: Edge):
+        if edge.start_node() is not None:
+            edge.start_node().connect_output(edge)
+
+    def connect_output(self, edge: Edge):
+        if edge.end_node() is not None:
+            self.content_widget.add_next_node(edge.end_node().content_widget)
+
+    def disconnect_input(self, edge):
+        if edge.start_node() is not None:
+            edge.start_node().disconnect_output(edge)
+
+    def disconnect_output(self, edge):
+        self.content_widget.remove_next_node(edge.end_node().content_widget)
+
+    def __str__(self):
+        return f'Node: {self.id}, ({str(self.content_widget)})'
