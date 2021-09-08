@@ -7,15 +7,18 @@ from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QFileDialog, QMessageBo
 from gui import NodeEditorWidget
 from gui.drag_node_list import DragNodeList
 from qss.qss_loader import load_style_sheets
+from utils import ResentFileManager
 
 
 class NodeEditorWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.current_file_name = None
+        self.resent_files_manager = ResentFileManager()
 
         load_style_sheets('nodeeditor-dark.qss', 'nodeeditor.qss')
         self.init_ui()
+        self.load_resent_file()
 
     def init_ui(self):
         self.init_file_menu()
@@ -49,8 +52,25 @@ class NodeEditorWindow(QMainWindow):
 
         file_menu.addAction(self.create_action('Quit', 'Ctrl+Q', 'Exit', self.on_file_quit))
 
+    def create_open_file_trigger_handler(self, path):
+        def handler():
+            is_save = self.call_message_box('Save Act?', "Save Act before open new one?")
+            if is_save == QMessageBox.Yes:
+                self.on_file_save()
+            elif is_save == QMessageBox.Cancel:
+                return
+            self.open_file(path)
+
+        return handler
+
     def create_open_resent_menu(self):
         menu = QMenu('Open Resent', self)
+        for path in self.resent_files_manager.get_resent_files():
+            file = os.path.splitext(os.path.basename(path))[0]
+            callback = self.create_open_file_trigger_handler(path)
+            action = self.create_action(file, None, None, callback)
+            menu.addAction(action)
+
         return menu
 
     def init_window_menu(self):
@@ -59,8 +79,10 @@ class NodeEditorWindow(QMainWindow):
 
     def create_action(self, name, shortcut, tooltip, callback):
         action = QAction(name, self)
-        action.setShortcut(shortcut)
-        action.setToolTip(tooltip)
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        if tooltip is not None:
+            action.setToolTip(tooltip)
         action.triggered.connect(callback)
         return action
 
@@ -81,6 +103,10 @@ class NodeEditorWindow(QMainWindow):
     def load_icon(self, icon_name):
         return QIcon(os.path.join(os.path.dirname(__file__), 'icons', icon_name))
 
+    def load_resent_file(self):
+        if self.resent_files_manager.get_last_file() is not None:
+            self.open_file(self.resent_files_manager.get_last_file())
+
     def update_title(self):
         file_name = self.current_file_name if self.current_file_name is not None else 'Undefined'
         self.setWindowTitle("Dialog Graph Redactor. " + file_name)
@@ -95,18 +121,32 @@ class NodeEditorWindow(QMainWindow):
         self.addDockWidget(Qt.RightDockWidgetArea, self.nodes_dock)
 
     def on_file_new(self):
+        is_save = self.call_message_box('Save Act?', "Save Act before creating new_one?")
+        if is_save == QMessageBox.Yes:
+            self.on_file_save()
+        elif is_save == QMessageBox.Cancel:
+            return
+
+        self.current_file_name = None
         self.node_editor_widget.create_new_scene()
 
-    def on_file_open(self, ask_for_saving=True):
-        if ask_for_saving:
+    def on_file_open(self):
+        is_save = self.call_message_box('Save Act?', "Save Act before open new one?")
+        if is_save == QMessageBox.Yes:
             self.on_file_save()
+        elif is_save == QMessageBox.Cancel:
+            return
 
         file_name, filter_ = QFileDialog.getOpenFileName(self, 'Open Act File', '', 'Act Scene Files (*.act)')
-        if file_name != '' and os.path.isfile(file_name):
+        self.open_file(file_name)
+
+    def open_file(self, file_name):
+        if file_name is not None and file_name != '' and os.path.isfile(file_name):
             self.node_editor_widget.load_scene_form_file(file_name)
             self.current_file_name = file_name
             self.update_title()
             self.statusBar().showMessage('Load ' + self.current_file_name)
+            self.resent_files_manager.add_resent_file(self.current_file_name)
 
     def on_file_save(self):
         if self.current_file_name is None:
@@ -114,6 +154,7 @@ class NodeEditorWindow(QMainWindow):
         else:
             self.node_editor_widget.save_scene_to_file(self.current_file_name)
             self.statusBar().showMessage('Saved to ' + self.current_file_name)
+            self.resent_files_manager.add_resent_file(self.current_file_name)
 
     def on_file_save_as(self):
         file_name, filter_ = QFileDialog.getSaveFileName(self, 'Save Act File', 'new_act_scene.act',
@@ -123,6 +164,7 @@ class NodeEditorWindow(QMainWindow):
             self.current_file_name = file_name
             self.update_title()
             self.statusBar().showMessage('Saved to ' + self.current_file_name)
+            self.resent_files_manager.add_resent_file(self.current_file_name)
 
     def on_file_export(self):
         if self.current_file_name is None or self.current_file_name == '':
@@ -139,19 +181,22 @@ class NodeEditorWindow(QMainWindow):
         self.close()
 
     def closeEvent(self, event) -> None:
-        msg_box = QMessageBox(self)
-        msg_box.setWindowTitle('Save Act before exit?')
-        msg_box.setText("Save Act before exit?")
-        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-        msg_box.setIcon(QMessageBox.Question)
-        msg_box.setDefaultButton(QMessageBox.Cancel)
-        res = msg_box.exec()
+        res = self.call_message_box('Save Act before exit?', "Save Act before exit?")
         if res == QMessageBox.Yes:
             self.on_file_save()
         elif res == QMessageBox.Cancel:
             event.ignore()
         else:
             super().closeEvent(event)
+
+    def call_message_box(self, title, text):
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(text)
+        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        msg_box.setIcon(QMessageBox.Question)
+        msg_box.setDefaultButton(QMessageBox.Cancel)
+        return msg_box.exec()
 
     def on_window_list_widget(self):
         self.nodes_dock.show()
