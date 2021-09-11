@@ -1,14 +1,14 @@
 from gui import QDMGraphicsNode
 from utils import Serializable
 from .edge import Edge
-from .socket import Socket
+from .socket import InputSocket, OutputSocket
 from .socket_position import SocketPosition as sp
 from .socket_type import SocketType as st
 
 
 class Node(Serializable):
     serialize_fields = [('scene.id', int), ('x', float), ('y', float),
-                        ('inputs', Socket), ('outputs', Socket), ('content_widget', Serializable)]
+                        ('inputs', InputSocket), ('outputs', OutputSocket), ('content_widget', Serializable)]
 
     def __init__(self, scene=None, parent=None):
         super().__init__()
@@ -72,7 +72,8 @@ class Node(Serializable):
     def update_connected_edges(self):
         for socket in self.inputs + self.outputs:
             if socket.has_edge():
-                socket.edge.update_position()
+                for edge in socket.edges:
+                    edge.update_position()
 
     def remove(self):
         for socket in self.inputs + self.outputs:
@@ -83,13 +84,13 @@ class Node(Serializable):
     def set_inputs_count(self, count):
         if len(self.inputs) < count:
             for _ in range(count - len(self.inputs)):
-                socket = Socket(self, len(self.inputs), sp.LEFT_TOP, st.INPUT)
+                socket = InputSocket(self, len(self.inputs), sp.LEFT_TOP, st.INPUT)
                 self.inputs.append(socket)
 
     def set_outputs_count(self, count):
         if len(self.outputs) < count:
             for _ in range(count - len(self.outputs)):
-                socket = Socket(self, len(self.outputs), sp.RIGHT_TOP, st.OUTPUT)
+                socket = OutputSocket(self, len(self.outputs), sp.RIGHT_TOP, st.OUTPUT)
                 self.outputs.append(socket)
 
     def remove_output(self, idx=-1):
