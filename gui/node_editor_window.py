@@ -5,6 +5,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QFileDialog, QMessageBox, QDockWidget
 
 from gui import NodeEditorWidget
+from gui.drag_characters_list import DragCharactersList
 from gui.drag_node_list import DragNodeList
 from qss.qss_loader import load_style_sheets
 from utils import ResentFileManager
@@ -33,6 +34,7 @@ class NodeEditorWindow(QMainWindow):
         self.statusBar().show()
 
         self.init_nodes_dock()
+        self.init_characters_dock()
 
         self.setWindowIcon(self.load_icon('favicon.png'))
         self.show()
@@ -75,7 +77,9 @@ class NodeEditorWindow(QMainWindow):
 
     def init_window_menu(self):
         window_menu = self.menuBar().addMenu('Window')
-        window_menu.addAction(self.create_action('Nodes List', 'Ctrl+L', 'Open Nodes List', self.on_window_list_widget))
+        window_menu.addAction(self.create_action('Nodes List', 'Ctrl+L', 'Open Nodes List', self.on_window_node_list))
+        window_menu.addAction(
+            self.create_action('Characters List', None, 'Open Characters List', self.on_window_char_list))
 
     def create_action(self, name, shortcut, tooltip, callback):
         action = QAction(name, self)
@@ -120,6 +124,16 @@ class NodeEditorWindow(QMainWindow):
 
         self.addDockWidget(Qt.RightDockWidgetArea, self.nodes_dock)
 
+    def init_characters_dock(self):
+        self.characers_list_widget = DragCharactersList(self)
+        self.characers_list_widget.set_act(self.node_editor_widget.get_act())
+
+        self.characters_dock = QDockWidget('Characters')
+        self.characters_dock.setWidget(self.characers_list_widget)
+        self.characters_dock.setFloating(False)
+
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.characters_dock)
+
     def on_file_new(self):
         is_save = self.call_message_box('Save Act?', "Save Act before creating new_one?")
         if is_save == QMessageBox.Yes:
@@ -129,6 +143,7 @@ class NodeEditorWindow(QMainWindow):
 
         self.current_file_name = None
         self.node_editor_widget.create_new_scene()
+        self.characers_list_widget.set_act(self.node_editor_widget.get_act())
 
     def on_file_open(self):
         is_save = self.call_message_box('Save Act?', "Save Act before open new one?")
@@ -143,6 +158,7 @@ class NodeEditorWindow(QMainWindow):
     def open_file(self, file_name):
         if file_name is not None and file_name != '' and os.path.isfile(file_name):
             self.node_editor_widget.load_scene_form_file(file_name)
+            self.characers_list_widget.set_act(self.node_editor_widget.get_act())
             self.current_file_name = file_name
             self.update_title()
             self.statusBar().showMessage('Load ' + self.current_file_name)
@@ -198,5 +214,8 @@ class NodeEditorWindow(QMainWindow):
         msg_box.setDefaultButton(QMessageBox.Cancel)
         return msg_box.exec()
 
-    def on_window_list_widget(self):
+    def on_window_node_list(self):
         self.nodes_dock.show()
+
+    def on_window_char_list(self):
+        self.characters_dock.show()

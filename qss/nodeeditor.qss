@@ -42,3 +42,7 @@ ActNodeWidget DeleteProofTextEdit {
     background-color: #ffffff;
 }
 
+DragCharactersList ProxyWidget
+{
+   background: transparent;
+}
