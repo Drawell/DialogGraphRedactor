@@ -10,6 +10,7 @@ class Replica(ActNodeWidget):
         super().__init__(node, parent)
         self.initial_delay = 1000
         self.auto_skip_delay = 0
+        self.is_add_stretch = False
 
     @property
     def replica_text(self):
@@ -21,8 +22,7 @@ class Replica(ActNodeWidget):
         if self._node is not None:
             self.text_edit.setText(value)
 
-    def init_ui(self):
-        super().init_ui()
+    def init_sub_class_ui(self):
         self.node.set_inputs_count(1)
         self.node.set_outputs_count(1)
 

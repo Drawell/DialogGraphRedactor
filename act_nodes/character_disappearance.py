@@ -10,10 +10,6 @@ class CharacterDisappearance(CharacterNode):
     def get_name():
         return 'CharacterDisappearance'
 
-    def init_ui(self):
-        super().init_ui()
-        self.layout.addStretch()
-
     @staticmethod
     def get_image():
         return ActNodeWidget.load_from_icons('character_disappearance.png')

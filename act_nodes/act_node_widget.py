@@ -32,6 +32,7 @@ class ActNodeWidget(QWidget, Serializable):
         # self.node = node if node is not None else None
 
         self.next_nodes_id = []
+        self.is_add_stretch = True
 
     def set_act(self, act):
         self.act = act
@@ -82,6 +83,8 @@ class ActNodeWidget(QWidget, Serializable):
         proxy_widget.setLayout(self.layout)
         scroll_area.setWidget(proxy_widget)
 
+        self.init_sub_class_ui()
+
         self.layout.addWidget(QLabel('Initial Delay:'))
         self.initial_delay_edit = DeleteProofLineEdit(str(self._initial_delay), self.node)
         self.initial_delay_edit.setValidator(QIntValidator(-10, 10000, self))
@@ -93,6 +96,12 @@ class ActNodeWidget(QWidget, Serializable):
         self.auto_skip_delay_edit.setValidator(QIntValidator(-10, 10000, self))
         self.auto_skip_delay_edit.textChanged.connect(self.on_auto_skip_delay_changed)
         self.layout.addWidget(self.auto_skip_delay_edit)
+
+        if self.is_add_stretch:
+            self.layout.addStretch()
+
+    def init_sub_class_ui(self):
+        pass
 
     def on_initial_delay_changed(self):
         self._initial_delay = int(self.initial_delay_edit.text())

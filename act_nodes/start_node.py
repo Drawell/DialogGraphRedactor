@@ -35,8 +35,7 @@ class StartNode(ActNodeWidget):
         if self._node is not None:
             self.name_edit.setText(value)
 
-    def init_ui(self):
-        super().init_ui()
+    def init_sub_class_ui(self):
         self.node.set_outputs_count(1)
 
         self.layout.addWidget(QLabel('Act Number:'))
@@ -49,8 +48,6 @@ class StartNode(ActNodeWidget):
         self.name_edit = DeleteProofLineEdit(str(self._act_name), self.node)
         self.name_edit.textChanged.connect(self.on_change_name)
         self.layout.addWidget(self.name_edit)
-
-        self.layout.addStretch()
 
     def on_change_num(self):
         self._act_num = int(self.num_edit.text())

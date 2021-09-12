@@ -24,16 +24,14 @@ class CharacterAppearance(CharacterNode):
         if self._node is not None:
             self.position_edit.setText(str(value))
 
-    def init_ui(self):
-        super().init_ui()
+    def init_sub_class_ui(self):
+        super().init_sub_class_ui()
 
         self.layout.addWidget(QLabel('Position:'))
         self.position_edit = DeleteProofLineEdit(str(self._position), self.node)
         self.position_edit.setValidator(QIntValidator(0, 5, self))
         self.position_edit.textChanged.connect(self.on_change_position)
         self.layout.addWidget(self.position_edit)
-
-        self.layout.addStretch()
 
     def on_change_position(self):
         self._position = int(self.position_edit.text())

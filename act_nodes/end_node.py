@@ -23,8 +23,7 @@ class EndNode(ActNodeWidget):
         if self._node is not None:
             self.num_edit.setText(str(value))
 
-    def init_ui(self):
-        super().init_ui()
+    def init_sub_class_ui(self):
         self.node.set_inputs_count(1)
 
         self.layout.addWidget(QLabel('Ending Id'))
@@ -32,8 +31,6 @@ class EndNode(ActNodeWidget):
         self.num_edit.setValidator(QIntValidator(0, 1000, self))
         self.num_edit.textChanged.connect(self.on_change_ending_id)
         self.layout.addWidget(self.num_edit)
-
-        self.layout.addStretch()
 
     def on_change_ending_id(self):
         self._ending_id = int(self.num_edit.text())

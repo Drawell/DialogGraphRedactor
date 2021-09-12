@@ -21,10 +21,9 @@ class Choice(ActNodeWidget):
         if self._node is not None:
             self.text_edit.setText('\n'.join(self._choices))
 
-    def init_ui(self):
-        super().init_ui()
+    def init_sub_class_ui(self):
         self.node.set_inputs_count(1)
-        self.node.set_outputs_count(1)
+        self.node.set_outputs_count(4)
 
         self.text_edit = DeleteProofTextEdit('\n'.join(self._choices), self.node)
         self.text_edit.textChanged.connect(self.on_change_text)

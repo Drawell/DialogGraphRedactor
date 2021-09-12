@@ -23,8 +23,7 @@ class CharacterNode(ActNodeWidget):
         if self._node is not None:
             self.char_select.set_current_character_id(value)
 
-    def init_ui(self):
-        super().init_ui()
+    def init_sub_class_ui(self):
         self.node.set_inputs_count(1)
         self.node.set_outputs_count(1)
 
