@@ -3,6 +3,7 @@ from sub_widgets import DeleteProofTextEdit
 
 
 class Choice(ActNodeWidget):
+    icon = 'choice.png'
     serialize_fields = ActNodeWidget.serialize_fields + [('choices', str)]
 
     def __init__(self, node=None, parent=None):
@@ -31,11 +32,3 @@ class Choice(ActNodeWidget):
 
     def on_change_text(self):
         self._choices = self.text_edit.toPlainText().split('\n')
-
-    @staticmethod
-    def get_name():
-        return 'Choice'
-
-    @staticmethod
-    def get_image():
-        return ActNodeWidget.load_from_icons('choice.png')

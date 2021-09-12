@@ -10,17 +10,20 @@ from utils import Serializable
 
 
 class ActNodeWidget(QWidget, Serializable):
+    icon = 'no_image.png'
     serialize_fields = [('initial_delay', int), ('auto_skip_delay', int),
                         ('next_nodes_id', int)]
 
     ICON_SIZE = 64
 
     def __init__(self, node=None, parent=None):
+
         super().__init__()
         self._node = None
         self.initial_delay = 2000
         self.auto_skip_delay = 1000
         self.act = None
+        self.is_add_stretch = True
 
         if type(parent) is Node:
             self.node = parent
@@ -29,10 +32,7 @@ class ActNodeWidget(QWidget, Serializable):
             self.node = node
             self.node.content_widget = self
 
-        # self.node = node if node is not None else None
-
         self.next_nodes_id = []
-        self.is_add_stretch = True
 
     def set_act(self, act):
         self.act = act
@@ -122,17 +122,13 @@ class ActNodeWidget(QWidget, Serializable):
     def remove(self):
         pass
 
-    @staticmethod
-    def get_name():
-        return 'Undefined'
+    @classmethod
+    def get_name(cls):
+        return cls.__name__
 
-    @staticmethod
-    def get_image():
-        return ActNodeWidget.load_from_icons('no_image.png')
-
-    @staticmethod
-    def load_from_icons(image):
-        return QPixmap(path.join(path.dirname(__file__), 'icons', image)) \
+    @classmethod
+    def get_image(cls):
+        return QPixmap(path.join(path.dirname(__file__), 'icons', cls.icon)) \
             .scaled(ActNodeWidget.ICON_SIZE, ActNodeWidget.ICON_SIZE)
 
     def __str__(self):

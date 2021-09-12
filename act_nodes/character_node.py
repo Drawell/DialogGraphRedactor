@@ -1,6 +1,5 @@
 from act_nodes.act_node_widget import ActNodeWidget
 from acts_system import Character
-from sub_widgets import DeleteProofLineEdit
 from sub_widgets.character_select import CharacterSelect
 
 
@@ -37,7 +36,3 @@ class CharacterNode(ActNodeWidget):
 
     def remove(self):
         self.char_select.remove()
-
-    @staticmethod
-    def get_name():
-        return 'CharacterNode'

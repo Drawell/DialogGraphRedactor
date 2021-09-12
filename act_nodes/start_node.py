@@ -6,6 +6,7 @@ from sub_widgets import DeleteProofLineEdit
 
 
 class StartNode(ActNodeWidget):
+    icon = 'start_node.png'
     serialize_fields = ActNodeWidget.serialize_fields + [('act_num', int), ('act_name', str)]
 
     def __init__(self, node=None, parent=None):
@@ -54,11 +55,3 @@ class StartNode(ActNodeWidget):
 
     def on_change_name(self):
         self._act_name = self.name_edit.text()
-
-    @staticmethod
-    def get_name():
-        return 'StartNode'
-
-    @staticmethod
-    def get_image():
-        return ActNodeWidget.load_from_icons('start_node.png')

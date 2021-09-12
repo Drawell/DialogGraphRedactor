@@ -6,6 +6,7 @@ from sub_widgets import DeleteProofLineEdit
 
 
 class EndNode(ActNodeWidget):
+    icon = 'end_node.png'
     serialize_fields = ActNodeWidget.serialize_fields + [('ending_id', int)]
 
     def __init__(self, node=None, parent=None):
@@ -34,11 +35,3 @@ class EndNode(ActNodeWidget):
 
     def on_change_ending_id(self):
         self._ending_id = int(self.num_edit.text())
-
-    @staticmethod
-    def get_name():
-        return 'EndNode'
-
-    @staticmethod
-    def get_image():
-        return ActNodeWidget.load_from_icons('end_node.png')

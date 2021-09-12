@@ -3,6 +3,7 @@ from sub_widgets import DeleteProofTextEdit
 
 
 class Replica(ActNodeWidget):
+    icon = 'replica.png'
     serialize_fields = ActNodeWidget.serialize_fields + [('replica_text', str)]
 
     def __init__(self, node=None, parent=None):
@@ -32,11 +33,3 @@ class Replica(ActNodeWidget):
 
     def on_change_text(self):
         self._replica_text = self.text_edit.toPlainText()
-
-    @staticmethod
-    def get_name():
-        return 'Replica'
-
-    @staticmethod
-    def get_image():
-        return ActNodeWidget.load_from_icons('replica.png')

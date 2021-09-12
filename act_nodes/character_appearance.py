@@ -2,11 +2,11 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QLabel
 
 from sub_widgets import DeleteProofLineEdit
-from .act_node_widget import ActNodeWidget
 from .character_node import CharacterNode
 
 
 class CharacterAppearance(CharacterNode):
+    icon = 'character_appearance.png'
     serialize_fields = CharacterNode.serialize_fields + [('position', int)]
 
     def __init__(self, node=None, parent=None):
@@ -35,11 +35,3 @@ class CharacterAppearance(CharacterNode):
 
     def on_change_position(self):
         self._position = int(self.position_edit.text())
-
-    @staticmethod
-    def get_name():
-        return 'CharacterAppearance'
-
-    @staticmethod
-    def get_image():
-        return ActNodeWidget.load_from_icons('character_appearance.png')
