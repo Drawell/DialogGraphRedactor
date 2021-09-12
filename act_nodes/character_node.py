@@ -1,5 +1,5 @@
 from act_nodes.act_node_widget import ActNodeWidget
-from gui.widgets import DeleteProofLineEdit
+from sub_widgets import DeleteProofLineEdit
 
 
 class CharacterNode(ActNodeWidget):

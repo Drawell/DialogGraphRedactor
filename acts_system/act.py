@@ -16,8 +16,8 @@ class Act(Serializable):
         self.tale_name = 'Undefined'
         self.act_id = 0
 
-        self.teller = Character.teller_character()
-        self._characters = [self.teller]
+        self._teller = Character.teller_character()
+        self._characters = [self._teller]
         self._characters_change_listeners = []
 
         self.start_nodes = []
@@ -77,5 +77,5 @@ class Act(Serializable):
             listener(self._characters)
 
     def clear(self):
-        self.characters = [self.teller]
+        self.characters = [self._teller]
 

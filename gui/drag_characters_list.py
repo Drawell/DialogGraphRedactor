@@ -1,9 +1,7 @@
-from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QWidget, QVBoxLayout, QPushButton, QScrollArea
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QScrollArea
 
-from acts_system import Act
 from .charcter_widget import CharacterWidget
-from .widgets import ProxyWidget
+from sub_widgets import ProxyWidget
 
 
 class DragCharactersList(QWidget):

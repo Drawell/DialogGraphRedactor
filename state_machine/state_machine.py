@@ -48,7 +48,7 @@ class StateMachine:
             socket = None
             if type(item) is QDMGraphicsSocket:
                 socket = item.socket  # type: Socket
-            elif type(item) is Socket:
+            elif issubclass(type(item), Socket):
                 socket = item
 
             if socket is not None:

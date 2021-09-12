@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIntValidator
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
 
-from gui.widgets import DeleteProofLineEdit
+from sub_widgets import DeleteProofLineEdit
 from node_system.node import Node
 from utils import Serializable
 

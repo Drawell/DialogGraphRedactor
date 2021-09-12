@@ -80,7 +80,8 @@ class InputSocket(Socket):
                 self.edges.remove(edge)
 
     def remove_edges(self):
-        for edge in self.edges:
+        edges = self._edges.copy()
+        for edge in edges:
             edge.remove()
 
 

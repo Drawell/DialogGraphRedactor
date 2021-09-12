@@ -1,9 +1,5 @@
 from act_nodes.act_node_widget import ActNodeWidget
-from gui.widgets import DeleteProofTextEdit
-
-
-from act_nodes.act_node_widget import ActNodeWidget
-from gui.widgets import DeleteProofTextEdit
+from sub_widgets import DeleteProofTextEdit
 
 
 class Choice(ActNodeWidget):

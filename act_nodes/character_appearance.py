@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QLabel
 
-from gui.widgets import DeleteProofLineEdit
+from sub_widgets import DeleteProofLineEdit
 from .act_node_widget import ActNodeWidget
 from .character_node import CharacterNode
 
