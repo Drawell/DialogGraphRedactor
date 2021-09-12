@@ -47,10 +47,16 @@ class DragCharactersList(QWidget):
 
     def init_items(self):
         for character in self._act.get_changeable_characters():
-            item = CharacterWidget(character, self)
+            item = CharacterWidget(character, self, self.on_delete)
             self.chars_layout.addWidget(item)
 
         self.chars_layout.addStretch()
+
+    def on_delete(self, character_widget):
+        for i in reversed(range(self.chars_layout.count())):
+            widget = self.chars_layout.itemAt(i).widget()
+            if widget and type(widget) == CharacterWidget and widget == character_widget:
+                self.chars_layout.itemAt(i).widget().setParent(None)
 
     def on_add_new(self):
         self._act.add_character()

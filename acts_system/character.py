@@ -19,7 +19,7 @@ class Character(Serializable):
     def char_id(self, value):
         self._char_id = value
         if self.act:
-            self.act.on_characters_change()
+            self.act.on_character_info_change(self)
 
     @property
     def name(self):
@@ -29,7 +29,7 @@ class Character(Serializable):
     def name(self, value):
         self._name = value
         if self.act:
-            self.act.on_characters_change()
+            self.act.on_character_info_change(self)
 
     def remove(self):
         if self.act:
@@ -37,12 +37,13 @@ class Character(Serializable):
 
     @staticmethod
     def teller_character():
-        _teller_char = Character()
-        _teller_char.id = 0
-        _teller_char.char_id = 'teller'
-        _teller_char.name = 'Teller'
+        if Character._teller_char is None:
+            Character._teller_char = Character()
+            Character._teller_char.id = 0
+            Character._teller_char.char_id = 'teller'
+            Character._teller_char.name = 'Teller'
 
-        return _teller_char
+        return Character._teller_char
 
     def __str__(self):
         return f'Char: {self.id}, {self._char_id}'

@@ -20,6 +20,7 @@ class ActNodeWidget(QWidget, Serializable):
         self._node = None
         self.initial_delay = 2000
         self.auto_skip_delay = 1000
+        self.act = None
 
         if type(parent) is Node:
             self.node = parent
@@ -32,6 +33,9 @@ class ActNodeWidget(QWidget, Serializable):
 
         self.next_nodes_id = []
 
+    def set_act(self, act):
+        self.act = act
+
     @property
     def node(self):
         return self._node
@@ -41,6 +45,7 @@ class ActNodeWidget(QWidget, Serializable):
         if self._node is None:
             self._node = value
             self.init_ui()
+            self.set_act(self._node.scene.act)
 
     @property
     def initial_delay(self):
@@ -105,12 +110,7 @@ class ActNodeWidget(QWidget, Serializable):
             return
         self.next_nodes_id.remove(next_act_node.id)
 
-    @property
-    def actual_class_name(self):
-        return type(self).__name__
-
-    @actual_class_name.setter
-    def actual_class_name(self, value):
+    def remove(self):
         pass
 
     @staticmethod

@@ -9,7 +9,8 @@ ActNodeWidget QWidget
 }
 
 ActNodeWidget QTextEdit,
-ActNodeWidget QLineEdit {
+ActNodeWidget QLineEdit,
+ActNodeWidget CharacterSelect{
   background: #666666;
   color: #ffffff;
 }

@@ -1,6 +1,7 @@
 from act_nodes import *
 from .character import Character
 from utils import Serializable
+from .character_change_listener import CharacterChangeListener
 
 
 class Act(Serializable):
@@ -18,7 +19,7 @@ class Act(Serializable):
 
         self._teller = Character.teller_character()
         self._characters = [self._teller]
-        self._characters_change_listeners = []
+        self._characters_change_listeners = []  # type: List[CharacterChangeListener]
 
         self.start_nodes = []
         self.character_appearances = []
@@ -35,7 +36,7 @@ class Act(Serializable):
     @characters.setter
     def characters(self, value):
         self._characters = value
-        self.on_characters_change()
+        self.on_characters_count_change()
 
     def serialized_event(self):
         self.nodes = {StartNode.get_name(): self.start_nodes,
@@ -65,16 +66,26 @@ class Act(Serializable):
 
     def add_character(self):
         self._characters.append(Character(self))
-        self.on_characters_change()
+        self.on_characters_count_change()
 
     def remove_character(self, character):
         self._characters.remove(character)
-        self.on_characters_change()
+        self.on_characters_count_change()
 
-    def on_characters_change(self):
-        print('characters changed')
+    def add_listener(self, listener: CharacterChangeListener):
+        self._characters_change_listeners.append(listener)
+
+    def remove_listener(self, listener: CharacterChangeListener):
+        if listener in self._characters_change_listeners:
+            self._characters_change_listeners.remove(listener)
+
+    def on_characters_count_change(self):
         for listener in self._characters_change_listeners:
-            listener(self._characters)
+            listener.characters_list_change(self._characters)
+
+    def on_character_info_change(self, character):
+        for listener in self._characters_change_listeners:
+            listener.character_info_change(character)
 
     def clear(self):
         self.characters = [self._teller]

@@ -76,7 +76,7 @@ class NodeEditorWidget(QWidget):
             if item is None:
                 self.handle_new_node_context_menu(event)
         except Exception as e:
-            pass
+            print(str(e))
 
     def handle_new_node_context_menu(self, event):
         context_menu_new_node = QMenu(self)

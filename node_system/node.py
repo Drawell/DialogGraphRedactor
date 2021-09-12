@@ -79,6 +79,7 @@ class Node(Serializable):
         for socket in self.inputs + self.outputs:
             socket.remove_edges()
         self.scene.remove_node(self)
+        self._content_widget.remove()
         self.gr_node = None
 
     def set_inputs_count(self, count):

@@ -5,12 +5,13 @@ from acts_system import Character
 
 class CharacterWidget(QWidget):
 
-    def __init__(self, character: Character, parent=None):
+    def __init__(self, character: Character, parent=None, on_delete_callback=None):
         super().__init__(parent)
         self.character = character
         self.init_ui()
         self.id_edit.setText(character.char_id)
         self.name_edit.setText(character.name)
+        self.on_delete_callback = on_delete_callback
         self.connect_events()
 
     def init_ui(self):
@@ -38,3 +39,5 @@ class CharacterWidget(QWidget):
 
     def on_delete(self):
         self.character.remove()
+        if self.on_delete_callback is not None:
+            self.on_delete_callback(self)

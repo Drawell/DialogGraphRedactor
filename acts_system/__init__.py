@@ -1,2 +1,2 @@
-from .act import Act
 from .character import Character
+from .act import Act
