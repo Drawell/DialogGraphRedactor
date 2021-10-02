@@ -1,14 +1,19 @@
 from act_nodes import *
+from act_nodes.set_landscape import SetLandscape
 from .character import Character
 from utils import Serializable
 from .character_change_listener import CharacterChangeListener
 
 
 class Act(Serializable):
-    serialize_fields = [('tale_name', str), ('act_id', int), ('characters', Character), ('start_nodes', StartNode),
+    serialize_fields = [('tale_name', str), ('act_id', int), ('characters', Character),
+                        ('start_nodes', StartNode),
                         ('character_appearances', CharacterAppearance),
                         ('character_disappearances', CharacterDisappearance),
-                        ('choices', Choice), ('replicas', Replica), ('end_nodes', EndNode),
+                        ('choices', Choice),
+                        ('replicas', Replica),
+                        ('set_landscapes', SetLandscape),
+                        ('end_nodes', EndNode),
                         ]
 
     def __init__(self, scene=None, parent=None):
@@ -26,6 +31,7 @@ class Act(Serializable):
         self.character_disappearances = []
         self.choices = []
         self.replicas = []
+        self.set_landscapes = []
         self.end_nodes = []
         self.serialized_event()
 
@@ -43,6 +49,7 @@ class Act(Serializable):
                       Replica.get_name(): self.replicas,
                       CharacterAppearance.get_name(): self.character_appearances,
                       CharacterDisappearance.get_name(): self.character_disappearances,
+                      SetLandscape.get_name(): self.set_landscapes,
                       Choice.get_name(): self.choices,
                       EndNode.get_name(): self.end_nodes,
                       }
@@ -58,7 +65,7 @@ class Act(Serializable):
             self.nodes[name].remove(node)
 
     def get_node_class_list(self):
-        return [Replica, Choice, CharacterAppearance, CharacterDisappearance, StartNode, EndNode]
+        return [Replica, Choice, CharacterAppearance, CharacterDisappearance, SetLandscape, StartNode, EndNode]
 
     def get_changeable_characters(self):
         chars = list(filter(lambda char: char != Character.teller_character(), self._characters))
@@ -89,4 +96,3 @@ class Act(Serializable):
 
     def clear(self):
         self.characters = [self._teller]
-

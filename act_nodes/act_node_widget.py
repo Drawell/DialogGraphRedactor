@@ -89,6 +89,10 @@ class ActNodeWidget(QWidget, Serializable):
     def add_next_node(self, next_act_node, idx=0):
         if next_act_node.id in self.next_nodes_id:
             return
+        if len(self.next_nodes_id) <= idx:
+            for i in range(len(self.next_nodes_id), idx + 1):
+                self.next_nodes_id.append(-1)
+
         self.next_nodes_id[idx] = next_act_node.id
 
     def remove_next_node(self, next_act_node):
