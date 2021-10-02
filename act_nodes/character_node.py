@@ -1,10 +1,10 @@
-from act_nodes.act_node_widget import ActNodeWidget
+from act_nodes.act_node_with_delay import ActNodeWithDelay
 from acts_system import Character
 from sub_widgets.character_select import CharacterSelect
 
 
-class CharacterNode(ActNodeWidget):
-    serialize_fields = ActNodeWidget.serialize_fields + [('character_id', str)]
+class CharacterNode(ActNodeWithDelay):
+    serialize_fields = ActNodeWithDelay.serialize_fields + [('character_id', str)]
 
     def __init__(self, node=None, parent=None):
         self._character_id = Character.teller_character().char_id
@@ -29,6 +29,8 @@ class CharacterNode(ActNodeWidget):
         self.char_select = CharacterSelect()
         self.char_select.set_current_character_id(self._character_id)
         self.layout.addWidget(self.char_select)
+
+        super().init_sub_class_ui()
 
     def set_act(self, act):
         super().set_act(act)

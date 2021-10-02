@@ -10,7 +10,8 @@ ActNodeWidget QWidget
 
 ActNodeWidget QTextEdit,
 ActNodeWidget QLineEdit,
-ActNodeWidget CharacterSelect{
+ActNodeWidget CharacterSelect,
+ActNodeWidget QComboBox{
   background: #666666;
   color: #ffffff;
 }
@@ -41,6 +42,7 @@ ActNodeWidget DeleteProofTextEdit {
     font-size: 10pt;
     color: #000000;
     background-color: #ffffff;
+    min-height: 145px;
 }
 
 DragCharactersList ProxyWidget

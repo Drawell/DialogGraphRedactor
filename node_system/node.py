@@ -103,7 +103,7 @@ class Node(Serializable):
 
     def connect_output(self, edge: Edge):
         if edge.end_node() is not None:
-            self.content_widget.add_next_node(edge.end_node().content_widget)
+            self.content_widget.add_next_node(edge.end_node().content_widget, edge.start_socket.index)
 
     def disconnect_input(self, edge):
         if edge.start_node() is not None:

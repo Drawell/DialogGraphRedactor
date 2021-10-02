@@ -1,13 +1,13 @@
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QLabel
 
-from act_nodes.act_node_widget import ActNodeWidget
+from act_nodes.act_node_with_delay import ActNodeWithDelay
 from sub_widgets import DeleteProofLineEdit
 
 
-class StartNode(ActNodeWidget):
+class StartNode(ActNodeWithDelay):
     icon = 'start_node.png'
-    serialize_fields = ActNodeWidget.serialize_fields + [('act_num', int), ('act_name', str)]
+    serialize_fields = ActNodeWithDelay.serialize_fields + [('act_num', int), ('act_name', str)]
 
     def __init__(self, node=None, parent=None):
         self._act_num = 1
@@ -49,6 +49,8 @@ class StartNode(ActNodeWidget):
         self.name_edit = DeleteProofLineEdit(str(self._act_name), self.node)
         self.name_edit.textChanged.connect(self.on_change_name)
         self.layout.addWidget(self.name_edit)
+
+        super().init_sub_class_ui()
 
     def on_change_num(self):
         self._act_num = int(self.num_edit.text())

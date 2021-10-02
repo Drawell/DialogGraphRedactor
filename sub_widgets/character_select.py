@@ -10,7 +10,6 @@ class CharacterSelect(QComboBox, CharacterChangeListener):
         super().__init__(parent)
         self.act = None
         self._current_character_id = Character.teller_character().char_id
-        self._current_id = Character.teller_character().id
 
     def set_act(self, act):
         self.act = act

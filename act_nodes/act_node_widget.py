@@ -17,11 +17,10 @@ class ActNodeWidget(QWidget, Serializable):
     ICON_SIZE = 64
 
     def __init__(self, node=None, parent=None):
-
         super().__init__()
         self._node = None
-        self.initial_delay = 2000
-        self.auto_skip_delay = 1000
+        self.initial_delay = 0
+        self.auto_skip_delay = 0
         self.act = None
         self.is_add_stretch = True
 
@@ -55,8 +54,6 @@ class ActNodeWidget(QWidget, Serializable):
     @initial_delay.setter
     def initial_delay(self, value):
         self._initial_delay = int(value)
-        if self._node is not None:
-            self.initial_delay_edit.setText(str(value))
 
     @property
     def auto_skip_delay(self):
@@ -65,8 +62,6 @@ class ActNodeWidget(QWidget, Serializable):
     @auto_skip_delay.setter
     def auto_skip_delay(self, value):
         self._auto_skip_delay = int(value)
-        if self._node is not None:
-            self.auto_skip_delay_edit.setText(str(value))
 
     def init_ui(self):
         scroll_area = QScrollArea(self)
@@ -85,39 +80,22 @@ class ActNodeWidget(QWidget, Serializable):
 
         self.init_sub_class_ui()
 
-        self.layout.addWidget(QLabel('Initial Delay:'))
-        self.initial_delay_edit = DeleteProofLineEdit(str(self._initial_delay), self.node)
-        self.initial_delay_edit.setValidator(QIntValidator(-10, 10000, self))
-        self.initial_delay_edit.textChanged.connect(self.on_initial_delay_changed)
-        self.layout.addWidget(self.initial_delay_edit)
-
-        self.layout.addWidget(QLabel('AutoSkipDelay:'))
-        self.auto_skip_delay_edit = DeleteProofLineEdit(str(self.auto_skip_delay), self.node)
-        self.auto_skip_delay_edit.setValidator(QIntValidator(-10, 10000, self))
-        self.auto_skip_delay_edit.textChanged.connect(self.on_auto_skip_delay_changed)
-        self.layout.addWidget(self.auto_skip_delay_edit)
-
         if self.is_add_stretch:
             self.layout.addStretch()
 
     def init_sub_class_ui(self):
         pass
 
-    def on_initial_delay_changed(self):
-        self._initial_delay = int(self.initial_delay_edit.text())
-
-    def on_auto_skip_delay_changed(self):
-        self._auto_skip_delay = int(self.auto_skip_delay_edit.text())
-
-    def add_next_node(self, next_act_node):
+    def add_next_node(self, next_act_node, idx=0):
         if next_act_node.id in self.next_nodes_id:
             return
-        self.next_nodes_id.append(next_act_node.id)
+        self.next_nodes_id[idx] = next_act_node.id
 
     def remove_next_node(self, next_act_node):
         if next_act_node is None or next_act_node.id not in self.next_nodes_id:
             return
-        self.next_nodes_id.remove(next_act_node.id)
+        idx = self.next_nodes_id.index(next_act_node.id)
+        self.next_nodes_id[idx] = -1
 
     def remove(self):
         pass
