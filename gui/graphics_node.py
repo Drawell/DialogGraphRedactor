@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QFont, QPainterPath, QColor, QPen, QBrush
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsTextItem, QGraphicsPixmapItem
 
-from sub_widgets import QDMDeleteButton
+from sub_widgets.delete_button import QDMDeleteButton
 
 
 class QDMGraphicsNode(QGraphicsItem):

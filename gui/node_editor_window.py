@@ -156,6 +156,7 @@ class NodeEditorWindow(QMainWindow):
             return
 
         self.current_file_name = None
+        self.update_title()
         self.node_editor_widget.create_new_scene()
         self.reset_act()
 

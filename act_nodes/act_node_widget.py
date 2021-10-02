@@ -1,16 +1,15 @@
 from os import path
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QIntValidator
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
-from sub_widgets import DeleteProofLineEdit
 from node_system.node import Node
 from utils import Serializable
 
 
 class ActNodeWidget(QWidget, Serializable):
-    icon = 'no_image.png'
+    icon = 'no_icon.png'
     serialize_fields = [('initial_delay', int), ('auto_skip_delay', int),
                         ('next_nodes_id', int)]
 
@@ -110,8 +109,11 @@ class ActNodeWidget(QWidget, Serializable):
 
     @classmethod
     def get_image(cls):
-        return QPixmap(path.join(path.dirname(__file__), 'icons', cls.icon)) \
-            .scaled(ActNodeWidget.ICON_SIZE, ActNodeWidget.ICON_SIZE)
+        icon_path = path.join(path.dirname(__file__), 'icons', cls.icon)
+        if not path.exists(icon_path):
+            icon_path = path.join(path.dirname(__file__), 'icons', ActNodeWidget.icon)
+
+        return QPixmap(icon_path).scaled(ActNodeWidget.ICON_SIZE, ActNodeWidget.ICON_SIZE)
 
     def __str__(self):
         return self.get_name()
