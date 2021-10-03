@@ -45,11 +45,13 @@ class ActNodeWithDelay(ActNodeWidget):
         self.layout.addWidget(self.auto_skip_delay_edit)
 
     def on_initial_delay_changed(self):
-        self._initial_delay = int(self.initial_delay_edit.text())
+        try:
+            self._initial_delay = int(self.initial_delay_edit.text())
+        except:
+            pass
 
     def on_auto_skip_delay_changed(self):
-        self._auto_skip_delay = int(self.auto_skip_delay_edit.text())
-
-
-
-
+        try:
+            self._auto_skip_delay = int(self.auto_skip_delay_edit.text())
+        except:
+            pass

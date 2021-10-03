@@ -53,7 +53,10 @@ class StartNode(ActNodeWithDelay):
         super().init_sub_class_ui()
 
     def on_change_num(self):
-        self._act_num = int(self.num_edit.text())
+        try:
+            self._act_num = int(self.num_edit.text())
+        except:
+            pass
 
     def on_change_name(self):
         self._act_name = self.name_edit.text()

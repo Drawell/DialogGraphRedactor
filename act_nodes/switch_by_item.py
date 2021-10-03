@@ -82,7 +82,13 @@ class SwitchByItem(ActNodeWidget):
         self._item_id = self.item_id_edit.text()
 
     def on_change_maximal_threshold(self):
-        self._maximal_threshold = int(self.maximal_threshold_edit.text())
+        try:
+            self._maximal_threshold = int(self.maximal_threshold_edit.text())
+        except:
+            pass
 
     def on_change_minimal_threshold(self):
-        self._minimal_threshold = int(self.minimal_threshold_edit.text())
+        try:
+            self._minimal_threshold = int(self.minimal_threshold_edit.text())
+        except:
+            pass

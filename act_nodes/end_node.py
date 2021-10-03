@@ -35,4 +35,7 @@ class EndNode(ActNodeWithDelay):
         super().init_sub_class_ui()
 
     def on_change_ending_id(self):
-        self._ending_id = int(self.num_edit.text())
+        try:
+            self._ending_id = int(self.num_edit.text())
+        except:
+            pass

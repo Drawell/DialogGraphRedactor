@@ -7,11 +7,11 @@ from sub_widgets import DeleteProofLineEdit
 
 class AddItem(ActNodeWidget):
     icon = 'add_item.png'
-    serialize_fields = ActNodeWidget.serialize_fields + [('item_id', str), ('number', int)]
+    serialize_fields = ActNodeWidget.serialize_fields + [('item_id', str), ('amount', int)]
 
     def __init__(self, node=None, parent=None):
         self._item_id = ''
-        self._number = 1
+        self._amount = 1
         super().__init__(node, parent)
 
     @property
@@ -25,14 +25,14 @@ class AddItem(ActNodeWidget):
             self.item_id_edit.setText(value)
 
     @property
-    def number(self):
-        return self._number
+    def amount(self):
+        return self._amount
 
-    @number.setter
-    def number(self, value):
-        self._number = value
+    @amount.setter
+    def amount(self, value):
+        self._amount = value
         if self._node is not None:
-            self.number_edit.setText(str(value))
+            self.amount_edit.setText(str(value))
 
     def init_sub_class_ui(self):
         self.node.set_inputs_count(1)
@@ -43,16 +43,19 @@ class AddItem(ActNodeWidget):
         self.item_id_edit.textChanged.connect(self.on_change_item_id)
         self.layout.addWidget(self.item_id_edit)
 
-        self.layout.addWidget(QLabel('Number:'))
-        self.number_edit = DeleteProofLineEdit(str(self._number), self.node)
-        self.number_edit.setValidator(QIntValidator(-10000, 10000, self))
-        self.number_edit.textChanged.connect(self.on_change_number)
-        self.layout.addWidget(self.number_edit)
+        self.layout.addWidget(QLabel('amount:'))
+        self.amount_edit = DeleteProofLineEdit(str(self._amount), self.node)
+        self.amount_edit.setValidator(QIntValidator(-10000, 10000, self))
+        self.amount_edit.textChanged.connect(self.on_change_amount)
+        self.layout.addWidget(self.amount_edit)
 
         super().init_sub_class_ui()
 
     def on_change_item_id(self):
         self._item_id = self.item_id_edit.text()
 
-    def on_change_number(self):
-        self._number = int(self.number_edit.text())
+    def on_change_amount(self):
+        try:
+            self._amount = int(self.amount_edit.text())
+        except:
+            pass

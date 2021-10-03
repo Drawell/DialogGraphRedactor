@@ -11,9 +11,9 @@ class Act(Serializable):
                         ('character_disappearances', CharacterDisappearance),
                         ('choices', Choice),
                         ('replicas', Replica),
-                        ('set_landscapes', SetLandscape),
                         ('add_item_nodes', AddItem),
                         ('switch_by_items', SwitchByItem),
+                        ('set_landscapes', SetLandscape),
                         ('end_nodes', EndNode),
                         ]
 
